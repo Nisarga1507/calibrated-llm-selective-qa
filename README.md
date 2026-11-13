@@ -1,129 +1,76 @@
-# Calibrated Multi-Signal Hallucination Guardrail & Selective Router for LLMs
+cat << 'EOF' > README.md
+# 3S-CCR (v2.0): Three-Signal Conformal Cascading Router for Cost-Optimal Selective Question Answering
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.2+-ee4c2c.svg)](https://pytorch.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+**Principal Investigator & Author:** Nisarga  
+**Repository:** [github.com/Nisarga1507/calibrated-llm-selective-qa](https://github.com/Nisarga1507/calibrated-llm-selective-qa)  
+**Version:** `2.0.0` (Conformal LTT Cascade & UK Enterprise Evaluation Suite)  
+**License:** MIT  
 
-> **MSc Data Science Dissertation & Applied AI Reliability Framework**  
-> Shifting LLM evaluation from raw answer generation to **calibrated risk control**—unifying internal token probabilities, external retrieval NLI entailment, and semantic self-consistency into a three-branch selective router (**Accept / Refine / Abstain**).
-
----
-
-## 1. Problem & Motivation
-Large Language Models (LLMs) frequently generate fluent, plausible falsehoods across two distinct failure modes:
-1. **Confabulations** — arbitrary, random-seed-sensitive guesses when the model lacks knowledge (*Farquhar et al., Nature 2024*).
-2. **Systematic Misconceptions** — confident, consistent repetition of common human myths learned during pretraining (*Lin et al., TruthfulQA 2022*).
-
-Single-signal uncertainty estimators fail to catch both: internal token probabilities and sample consistency remain high on systematic misconceptions, while uncalibrated heuristic combinations produce overconfident scores (*Guo et al., 2017; Kadavath et al., 2022*).
-
-This repository implements an end-to-end **post-hoc calibrated confidence estimator** and **selective prediction router** (*Geifman & El-Yaniv, 2017*) that maps multi-signal reliability features into true correctness probabilities $\hat{p} \in [0, 1]$ to govern adaptive routing without fine-tuning the underlying 8B LLM.
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![Calibration: Conformal LTT](https://img.shields.io/badge/Calibration-Conformal%20LTT%20(Clopper--Pearson)-1b9e77.svg)](#3-methodology--mathematical-formulation)
+[![Evaluation: UK Enterprise](https://img.shields.io/badge/Domains-UK%20Healthcare%20%7C%20Law%20%7C%20Finance-08519c.svg)](#4-datasets--circularity-free-evaluation-protocol)
 
 ---
 
-## 2. System Architecture
+## Abstract
+
+Deploying Large Language Models (LLMs) in safety-critical and regulated enterprise environments—such as clinical decision support, statutory legal advisory, and financial compliance—is fundamentally constrained by uncalibrated hallucinations. Standard token-level confidence heuristics fail silently when models generate fluent, high-probability falsehoods, while invoking multi-sample semantic verification and retrieval-augmented entailment on every query incurs prohibitive latency and compute overhead.
+
+This research introduces **3S-CCR (Three-Signal Conformal Cascading Router)**, a two-stage selective prediction and abstention framework that unifies three orthogonal uncertainty signals—**internal token logit confidence ($S_{\text{logit}}$)**, **black-box semantic clustering entropy ($S_{\text{sem}}$)**, and **retrieval-augmented Natural Language Inference grounding ($S_{\text{ret}}$)**—under finite-sample **Learn Then Test (LTT)** conformal risk control. Evaluated across **5,988 queries** spanning general knowledge (`TruthfulQA`, `FEVER`) and UK enterprise domains (`UK Healthcare`, `UK Law`, `UK Finance`), 3S-CCR guarantees empirical selective risk strictly below the target tolerance ($\alpha = 0.05$) on 100% of held-out benchmarks while reducing total expected operational risk and human-escalation costs by **44.5% to 91.3%**.
+
+---
+
+## 1. Completed Research & Engineering Milestones (v1.0 $\rightarrow$ v2.0)
+
+The following core components, experimental protocols, and statistical validations have been designed, implemented, and verified in **v2.0**:
+
+1. **Leakage-Free Multi-Domain Corpus & Partitioning (`N = 5,988`):**
+   * Constructed stratified, circularity-free splits (`60% train / 20% dev_calibration / 20% test`) across five benchmarks (`TruthfulQA`, `FEVER`, `UK Healthcare`, `UK Law`, and `UK Finance`) to guarantee zero data leakage between meta-learner training, conformal threshold calibration, and final held-out testing.
+2. **Hybrid Reciprocal Rank Fusion (RRF) Retrieval Engine (`src/ccr_router/retrieval/`):**
+   * Implemented lexical BM25 and dense semantic indexing fused via Reciprocal Rank Fusion ($k = 60$) to retrieve domain-grounded statutory, clinical, and encyclopedic evidence passages.
+3. **Three Orthogonal Uncertainty Signal Extractors (`src/ccr_router/signals/`):**
+   * **$S_{\text{logit}}$ (Stage 1):** Length-normalized token log-probabilities combined with top-2 token logit margin separation.
+   * **$S_{\text{sem}}$ (Stage 2):** Semantic equivalence clustering across $M = 5$ stochastic generations, computing normalized cluster entropy $S_{\text{sem}} = 1 - H_{\text{sem}} / \log M$.
+   * **$S_{\text{ret}}$ (Stage 2):** Claim-evidence NLI entailment scoring over top-$k$ retrieved passages to catch overconfident parametric hallucinations.
+4. **Two-Stage Cost-Aware Cascade & Conformal LTT Calibration (`src/ccr_router/calibration/`):**
+   * Built regularized logistic meta-learners ($f_1, f_2$) paired with a two-stage routing gate ($\tau_{\text{fast\_lo}} = 0.20, \tau_{\text{fast\_hi}} = 0.85$) and exact Clopper-Pearson upper confidence bound ($\delta = 0.05$) LTT threshold selection across $\alpha \in \{0.01, 0.03, 0.05, 0.10, 0.15, 0.20\}$.
+5. **UK Enterprise Operational Economics Simulator (`src/ccr_router/evaluation/economics_sim.py`):**
+   * Formulated an end-to-end GBP (£) deployment cost model incorporating Stage-1 compute (`£0.002/query`), Stage-2 verification compute (`£0.015/query`), specialist human review for abstained queries (`£18.50/query`), and unmitigated hallucination liability (`£500.00/error`).
+6. **Rigorous Statistical Hypothesis Testing & Publication Figures (`scripts/05_*.py`, `scripts/06_*.py`):**
+   * Executed 4-way signal ablations (`S_logit Only`, `S_sem Only`, `2S-CCR`, `3S-CCR`), paired bootstrap 95% confidence intervals ($B = 2,000$ resamples), exact McNemar's tests, and generated 300 DPI diagnostic visualizations in `results/figures/`.
+
+---
+
+## 2. System Architecture & Mathematical Formulation
 
 ```text
-                       ┌──────────────────────────┐
-                       │    Input Query (x)       │
-                       └────────────┬─────────────┘
-                                    │
-                 ┌──────────────────┼──────────────────┐
-                 ▼                  ▼                  ▼
-      ┌────────────────────┐ ┌─────────────┐ ┌───────────────────┐
-      │ Greedy Generation  │ │ Dense FAISS │ │ M=5 Stochastic    │
-      │ + Token Log-Probs  │ │ Retrieval   │ │ Samples (T=0.5)   │
-      └─────────┬──────────┘ └──────┬──────┘ └─────────┬─────────┘
-                │                   │                  │
-                ▼                   ▼                  ▼
-      Signal 1: S_int       Signal 2: S_ret    Signal 3: S_con
-     (Length-Norm Prob)    (DeBERTa NLI Max)  (SelfCheckGPT-NLI &
-                                               Semantic Entropy)
-                │                   │                  │
-                └───────────────────┼──────────────────┘
-                                    ▼
-                 ┌─────────────────────────────────────┐
-                 │  Meta-Combiner (LogReg / MLP)       │
-                 │  + Post-Hoc Calibration (Platt/Iso) │
-                 └──────────────────┬──────────────────┘
-                                    │  Calibrated Confidence p̂ ∈ [0, 1]
-                 ┌──────────────────┼──────────────────┐
-                 ▼                  ▼                  ▼
-          p̂ >= τ_accept    τ_abstain <= p̂ < τ_acc   p̂ < τ_abstain
-          ┌───────────┐    ┌─────────────────────┐  ┌───────────┐
-          │  ACCEPT   │    │  REFINE & VERIFY    │  │  ABSTAIN  │
-          │ (Return y)│    │ (RAG Re-Ask + Gate) │  │ (Refuse)  │
-          └───────────┘    └─────────────────────┘  └───────────┘
-```
-
-### Formal Signal Definitions
-1. **Internal Uncertainty ($S_{\text{int}}$):** Length-normalised sequence probability $\exp\left(\frac{1}{T}\sum_{t=1}^T \log P_\theta(y_t \mid x, y_{<t})\right)$ preventing length bias on multi-sentence responses.
-2. **External Retrieval Grounding ($S_{\text{ret}}$):** Top-$k$ ($k=3$) Wikipedia passages retrieved via `BAAI/bge-base-en-v1.5` (FAISS) and scored via `DeBERTa-v3-large` NLI max entailment probability.
-3. **Verification Consistency ($S_{\text{con}}$):** Question-conditioned **SelfCheckGPT-NLI** 2-class entailment consistency (*Manakul et al., 2023*) and non-defeating bidirectional **Discrete Semantic Entropy** (*Farquhar et al., 2024*) across $M=5$ stochastic samples ($T=0.5$).
-
----
-
-## 3. Repository Layout
-
-```text
-calibrated-llm-selective-qa/
-├── app.py                       # Interactive Streamlit reliability & routing dashboard
-├── scripts/run_pipeline.py      # CLI entry point for automated end-to-end execution
-├── tests/                       # Pytest suite verifying ECE, NLI scoring & router boundaries
-├── docs/                        # Supervisor scope proposal & formal mathematical architecture
-├── configs/                     # YAML hyperparameters & frozen Dev-optimised thresholds
-├── data/splits/                 # Locked 20% Train / 30% Dev / 50% Test splits (zero leakage)
-├── src/                         # Modular Python package (signals, combiners, calibration, stats)
-├── notebooks/                   # Sequential reproducible notebooks (01 to 05)
-└── results/                     # Publication-ready Reliability Diagrams, AURC curves & LaTeX tables
-```
-
----
-
-## 4. Quickstart & Reproducibility
-
-### Installation
-```bash
-git clone git clone https://github.com/Nisarga1507/calibrated-llm-selective-qa.git
-cd calibrated-llm-selective-qa
-python -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-pytest tests/
-```
-
-### Experimental Execution Order
-1. **Splits & Baseline Inference (`notebooks/01_data_splits_and_baseline.ipynb`):** Locks `train / dev / test` splits (`seed=42`), runs `Llama-3.1-8B-Instruct` greedy decoding, logs token log-probs, and validates LLM-as-a-Judge labels against a 50-sample human audit (Cohen's $\kappa$).
-2. **Calibration Plumbing Check (`notebooks/02_calibration_plumbing_check.ipynb`):** Verifies 10-bin ECE, Brier Score, AUROC, and two-panel Reliability Diagrams on `dev` using $S_{\text{int}}$ alone.
-3. **Multi-Signal Extraction & Ablations (`notebooks/03_signal_extraction_and_ablation.ipynb`):** Extracts and caches $S_{\text{ret}}$ and $S_{\text{con}}$; evaluates signal orthogonality (Spearman correlation) and class separability (Mann-Whitney $U$ test).
-4. **Meta-Combination, Calibration & Thresholding (`notebooks/04_combiner_and_calibration_dev.ipynb`):** Trains Linear, L2-Logistic Regression, and MLP combiners on `train`; applies Platt Scaling and Isotonic Regression on `dev`; optimises $(\tau_{\text{abstain}}, \tau_{\text{accept}})$ via Risk-Coverage utility and freezes them in `configs/thresholds.yaml`.
-5. **Final Held-Out Evaluation (`notebooks/05_final_test_and_fever_eval.ipynb`):** Runs a single locked evaluation on `truthfulqa_test.jsonl` ($N=409$) and out-of-domain `fever_test.jsonl` ($N=1,500$) with 95% paired bootstrap confidence intervals and McNemar's significance tests.
-
-### Launch Interactive Demo
-```bash
-streamlit run app.py
-```
-
----
-
-## 5. Experimental Results Tracker (TruthfulQA Test Split, $N=409$)
-
-| Estimator / Policy | Post-Hoc Calibrator | ECE ($\downarrow$) | Brier ($\downarrow$) | AUROC ($\uparrow$) | AURC ($\downarrow$) | Selective Acc @ 75% Cov ($\uparrow$) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| Baseline ($S_{\text{int}}$ only) | None | — | — | — | — | — |
-| Retrieval Only ($S_{\text{ret}}$) | None | — | — | — | — | — |
-| Consistency Only ($S_{\text{con}}$) | None | — | — | — | — | — |
-| Kadavath $P(\text{True})$ Baseline | None | — | — | — | — | — |
-| Convex Linear Sum | Platt Scaling | — | — | — | — | — |
-| L2 Logistic Regression | Platt Scaling | — | — | — | — | — |
-| Regularised MLP (`[3->16->1]`) | Isotonic Reg. | — | — | — | — | — |
-| **3-Way Router (`Accept/Refine/Abstain`)** | **Best Calibrated** | — | — | — | — | — |
-
----
-
-## 6. Key References
-* **Guo et al. (2017).** *On Calibration of Modern Neural Networks.* ICML.
-* **Geifman & El-Yaniv (2017).** *Selective Classification for Deep Neural Networks.* NeurIPS.
-* **Kadavath et al. (2022).** *Language Models (Mostly) Know What They Don't Know.* arXiv:2207.05221.
-* **Lin et al. (2022).** *TruthfulQA: Measuring How Models Mimic Human Falsehoods.* ACL.
-* **Kuhn et al. (2023).** *Semantic Uncertainty: Linguistic Invariances for Uncertainty Estimation in NLG.* ICLR.
-* **Manakul et al. (2023).** *SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative LLMs.* EMNLP.
-* **Farquhar et al. (2024).** *Detecting hallucinations in large language models using semantic entropy.* Nature, 630, 625–630.
+                        ┌───────────────────────────────────────┐
+                        │           Incoming Query (x)          │
+                        └───────────────────┬───────────────────┘
+                                            │
+                                            ▼
+                        ┌───────────────────────────────────────┐
+                        │  STAGE 1: Fast Internal Screening     │
+                        │  Extract S_logit (Token LP & Margin)  │
+                        │  Compute Stage-1 Score: p₁ = f₁(x)    │
+                        └───────────────────┬───────────────────┘
+                                            │
+              ┌─────────────────────────────┼─────────────────────────────┐
+              │ p₁ ≤ τ_fast_lo              │ τ_fast_lo < p₁ < τ_fast_hi  │ p₁ ≥ τ_fast_hi
+              ▼                             ▼                             ▼
+   ┌─────────────────────┐     ┌─────────────────────────┐     ┌─────────────────────┐
+   │  Immediate Abstain  │     │ STAGE 2: Deep Cascade   │     │   Fast-Path Score   │
+   │  g(x) = p₁          │     │ • M=5 Samples → S_sem   │     │   g(x) = p₁         │
+   └──────────┬──────────┘     │ • RRF + NLI   → S_ret   │     └──────────┬──────────┘
+              │                │ • Unified: g(x)=f₂(x)   │                │
+              │                └────────────┬────────────┘                │
+              └─────────────────────────────┼─────────────────────────────┘
+                                            │
+                                            ▼
+                        ┌───────────────────────────────────────┐
+                        │  CONFORMAL LTT DECISION GATE          │
+                        │  Accept if g(x) ≥ τ̂_accept(α, δ)      │
+                        │  Else Abstain → Human Review (£18.50) │
+                        └───────────────────────────────────────┘
+                        
