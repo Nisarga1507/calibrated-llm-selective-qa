@@ -1,0 +1,6 @@
+dataset,n_test,target_alpha,tau_accept,feasible,stage2_trigger_rate,coverage,selective_risk,selective_accuracy,auroc,aurc,ece,always_accept_gbp_per_1k,single_stage_gbp_per_1k,cascade_3sccr_gbp_per_1k,compute_savings_vs_full_pct,total_risk_cost_savings_pct
+truthful_qa,164,0.05,0.978,True,0.0854,0.4268,0.0,1.0,0.9964,0.1164,0.0343,219518.2,10609.66,10605.54,68.6,95.17
+fever,400,0.05,0.029,True,0.0125,0.9,0.0278,0.9722,1.0,0.0082,0.0094,62506.0,14356.0,14351.56,74.06,77.04
+uk_healthcare,200,0.05,0.028,True,0.035,0.965,0.0725,0.9275,0.9957,0.0062,0.0236,52506.0,35653.5,35649.16,72.38,32.1
+uk_law,195,0.05,0.192,True,0.0359,0.9077,0.0282,0.9718,0.9968,0.007,0.0227,56416.26,14534.21,14529.87,72.31,74.25
+uk_finance,240,0.05,0.096,True,0.0125,0.9208,0.0136,0.9864,1.0,0.0043,0.0084,45839.33,7720.58,7716.14,74.06,83.17

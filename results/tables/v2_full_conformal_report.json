@@ -1,0 +1,447 @@
+{
+  "truthful_qa": {
+    "default_operating_point": {
+      "dataset": "truthful_qa",
+      "n_test": 164,
+      "target_alpha": 0.05,
+      "tau_accept": 0.978,
+      "feasible": true,
+      "stage2_trigger_rate": 0.0854,
+      "coverage": 0.4268,
+      "selective_risk": 0.0,
+      "selective_accuracy": 1.0,
+      "auroc": 0.9964,
+      "aurc": 0.1164,
+      "ece": 0.0343,
+      "always_accept_gbp_per_1k": 219518.2,
+      "single_stage_gbp_per_1k": 10609.66,
+      "cascade_3sccr_gbp_per_1k": 10605.54,
+      "compute_savings_vs_full_pct": 68.6,
+      "total_risk_cost_savings_pct": 95.17
+    },
+    "alpha_sweep": {
+      "0.01": {
+        "tau_accept": 1.0001,
+        "feasible": false,
+        "dev_ucb_risk": 1.0,
+        "coverage": 0.0,
+        "selective_risk": 0.0,
+        "selective_accuracy": 1.0,
+        "auroc": 0.9964,
+        "aurc": 0.1164,
+        "ece": 0.0343
+      },
+      "0.03": {
+        "tau_accept": 1.0001,
+        "feasible": false,
+        "dev_ucb_risk": 1.0,
+        "coverage": 0.0,
+        "selective_risk": 0.0,
+        "selective_accuracy": 1.0,
+        "auroc": 0.9964,
+        "aurc": 0.1164,
+        "ece": 0.0343
+      },
+      "0.05": {
+        "tau_accept": 0.978,
+        "feasible": true,
+        "dev_ucb_risk": 0.0397,
+        "coverage": 0.4268,
+        "selective_risk": 0.0,
+        "selective_accuracy": 1.0,
+        "auroc": 0.9964,
+        "aurc": 0.1164,
+        "ece": 0.0343
+      },
+      "0.1": {
+        "tau_accept": 0.554,
+        "feasible": true,
+        "dev_ucb_risk": 0.0919,
+        "coverage": 0.561,
+        "selective_risk": 0.0217,
+        "selective_accuracy": 0.9783,
+        "auroc": 0.9964,
+        "aurc": 0.1164,
+        "ece": 0.0343
+      },
+      "0.15": {
+        "tau_accept": 0.152,
+        "feasible": true,
+        "dev_ucb_risk": 0.1489,
+        "coverage": 0.6159,
+        "selective_risk": 0.0891,
+        "selective_accuracy": 0.9109,
+        "auroc": 0.9964,
+        "aurc": 0.1164,
+        "ece": 0.0343
+      },
+      "0.2": {
+        "tau_accept": 0.049,
+        "feasible": true,
+        "dev_ucb_risk": 0.197,
+        "coverage": 0.6829,
+        "selective_risk": 0.1786,
+        "selective_accuracy": 0.8214,
+        "auroc": 0.9964,
+        "aurc": 0.1164,
+        "ece": 0.0343
+      }
+    }
+  },
+  "fever": {
+    "default_operating_point": {
+      "dataset": "fever",
+      "n_test": 400,
+      "target_alpha": 0.05,
+      "tau_accept": 0.029,
+      "feasible": true,
+      "stage2_trigger_rate": 0.0125,
+      "coverage": 0.9,
+      "selective_risk": 0.0278,
+      "selective_accuracy": 0.9722,
+      "auroc": 1.0,
+      "aurc": 0.0082,
+      "ece": 0.0094,
+      "always_accept_gbp_per_1k": 62506.0,
+      "single_stage_gbp_per_1k": 14356.0,
+      "cascade_3sccr_gbp_per_1k": 14351.56,
+      "compute_savings_vs_full_pct": 74.06,
+      "total_risk_cost_savings_pct": 77.04
+    },
+    "alpha_sweep": {
+      "0.01": {
+        "tau_accept": 0.886,
+        "feasible": true,
+        "dev_ucb_risk": 0.0084,
+        "coverage": 0.87,
+        "selective_risk": 0.0,
+        "selective_accuracy": 1.0,
+        "auroc": 1.0,
+        "aurc": 0.0082,
+        "ece": 0.0094
+      },
+      "0.03": {
+        "tau_accept": 0.092,
+        "feasible": true,
+        "dev_ucb_risk": 0.0286,
+        "coverage": 0.89,
+        "selective_risk": 0.0169,
+        "selective_accuracy": 0.9831,
+        "auroc": 1.0,
+        "aurc": 0.0082,
+        "ece": 0.0094
+      },
+      "0.05": {
+        "tau_accept": 0.029,
+        "feasible": true,
+        "dev_ucb_risk": 0.0486,
+        "coverage": 0.9,
+        "selective_risk": 0.0278,
+        "selective_accuracy": 0.9722,
+        "auroc": 1.0,
+        "aurc": 0.0082,
+        "ece": 0.0094
+      },
+      "0.1": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0698,
+        "coverage": 0.91,
+        "selective_risk": 0.0385,
+        "selective_accuracy": 0.9615,
+        "auroc": 1.0,
+        "aurc": 0.0082,
+        "ece": 0.0094
+      },
+      "0.15": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0698,
+        "coverage": 0.91,
+        "selective_risk": 0.0385,
+        "selective_accuracy": 0.9615,
+        "auroc": 1.0,
+        "aurc": 0.0082,
+        "ece": 0.0094
+      },
+      "0.2": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0698,
+        "coverage": 0.91,
+        "selective_risk": 0.0385,
+        "selective_accuracy": 0.9615,
+        "auroc": 1.0,
+        "aurc": 0.0082,
+        "ece": 0.0094
+      }
+    }
+  },
+  "uk_healthcare": {
+    "default_operating_point": {
+      "dataset": "uk_healthcare",
+      "n_test": 200,
+      "target_alpha": 0.05,
+      "tau_accept": 0.028,
+      "feasible": true,
+      "stage2_trigger_rate": 0.035,
+      "coverage": 0.965,
+      "selective_risk": 0.0725,
+      "selective_accuracy": 0.9275,
+      "auroc": 0.9957,
+      "aurc": 0.0062,
+      "ece": 0.0236,
+      "always_accept_gbp_per_1k": 52506.0,
+      "single_stage_gbp_per_1k": 35653.5,
+      "cascade_3sccr_gbp_per_1k": 35649.16,
+      "compute_savings_vs_full_pct": 72.38,
+      "total_risk_cost_savings_pct": 32.1
+    },
+    "alpha_sweep": {
+      "0.01": {
+        "tau_accept": 1.0001,
+        "feasible": false,
+        "dev_ucb_risk": 1.0,
+        "coverage": 0.0,
+        "selective_risk": 0.0,
+        "selective_accuracy": 1.0,
+        "auroc": 0.9957,
+        "aurc": 0.0062,
+        "ece": 0.0236
+      },
+      "0.03": {
+        "tau_accept": 0.084,
+        "feasible": true,
+        "dev_ucb_risk": 0.025,
+        "coverage": 0.93,
+        "selective_risk": 0.043,
+        "selective_accuracy": 0.957,
+        "auroc": 0.9957,
+        "aurc": 0.0062,
+        "ece": 0.0236
+      },
+      "0.05": {
+        "tau_accept": 0.028,
+        "feasible": true,
+        "dev_ucb_risk": 0.047,
+        "coverage": 0.965,
+        "selective_risk": 0.0725,
+        "selective_accuracy": 0.9275,
+        "auroc": 0.9957,
+        "aurc": 0.0062,
+        "ece": 0.0236
+      },
+      "0.1": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0784,
+        "coverage": 0.985,
+        "selective_risk": 0.0914,
+        "selective_accuracy": 0.9086,
+        "auroc": 0.9957,
+        "aurc": 0.0062,
+        "ece": 0.0236
+      },
+      "0.15": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0784,
+        "coverage": 0.985,
+        "selective_risk": 0.0914,
+        "selective_accuracy": 0.9086,
+        "auroc": 0.9957,
+        "aurc": 0.0062,
+        "ece": 0.0236
+      },
+      "0.2": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0784,
+        "coverage": 0.985,
+        "selective_risk": 0.0914,
+        "selective_accuracy": 0.9086,
+        "auroc": 0.9957,
+        "aurc": 0.0062,
+        "ece": 0.0236
+      }
+    }
+  },
+  "uk_law": {
+    "default_operating_point": {
+      "dataset": "uk_law",
+      "n_test": 195,
+      "target_alpha": 0.05,
+      "tau_accept": 0.192,
+      "feasible": true,
+      "stage2_trigger_rate": 0.0359,
+      "coverage": 0.9077,
+      "selective_risk": 0.0282,
+      "selective_accuracy": 0.9718,
+      "auroc": 0.9968,
+      "aurc": 0.007,
+      "ece": 0.0227,
+      "always_accept_gbp_per_1k": 56416.26,
+      "single_stage_gbp_per_1k": 14534.21,
+      "cascade_3sccr_gbp_per_1k": 14529.87,
+      "compute_savings_vs_full_pct": 72.31,
+      "total_risk_cost_savings_pct": 74.25
+    },
+    "alpha_sweep": {
+      "0.01": {
+        "tau_accept": 1.0001,
+        "feasible": false,
+        "dev_ucb_risk": 1.0,
+        "coverage": 0.0,
+        "selective_risk": 0.0,
+        "selective_accuracy": 1.0,
+        "auroc": 0.9968,
+        "aurc": 0.007,
+        "ece": 0.0227
+      },
+      "0.03": {
+        "tau_accept": 0.259,
+        "feasible": true,
+        "dev_ucb_risk": 0.0267,
+        "coverage": 0.9026,
+        "selective_risk": 0.0284,
+        "selective_accuracy": 0.9716,
+        "auroc": 0.9968,
+        "aurc": 0.007,
+        "ece": 0.0227
+      },
+      "0.05": {
+        "tau_accept": 0.192,
+        "feasible": true,
+        "dev_ucb_risk": 0.043,
+        "coverage": 0.9077,
+        "selective_risk": 0.0282,
+        "selective_accuracy": 0.9718,
+        "auroc": 0.9968,
+        "aurc": 0.007,
+        "ece": 0.0227
+      },
+      "0.1": {
+        "tau_accept": 0.032,
+        "feasible": true,
+        "dev_ucb_risk": 0.096,
+        "coverage": 0.9692,
+        "selective_risk": 0.0847,
+        "selective_accuracy": 0.9153,
+        "auroc": 0.9968,
+        "aurc": 0.007,
+        "ece": 0.0227
+      },
+      "0.15": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.119,
+        "coverage": 0.9897,
+        "selective_risk": 0.1036,
+        "selective_accuracy": 0.8964,
+        "auroc": 0.9968,
+        "aurc": 0.007,
+        "ece": 0.0227
+      },
+      "0.2": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.119,
+        "coverage": 0.9897,
+        "selective_risk": 0.1036,
+        "selective_accuracy": 0.8964,
+        "auroc": 0.9968,
+        "aurc": 0.007,
+        "ece": 0.0227
+      }
+    }
+  },
+  "uk_finance": {
+    "default_operating_point": {
+      "dataset": "uk_finance",
+      "n_test": 240,
+      "target_alpha": 0.05,
+      "tau_accept": 0.096,
+      "feasible": true,
+      "stage2_trigger_rate": 0.0125,
+      "coverage": 0.9208,
+      "selective_risk": 0.0136,
+      "selective_accuracy": 0.9864,
+      "auroc": 1.0,
+      "aurc": 0.0043,
+      "ece": 0.0084,
+      "always_accept_gbp_per_1k": 45839.33,
+      "single_stage_gbp_per_1k": 7720.58,
+      "cascade_3sccr_gbp_per_1k": 7716.14,
+      "compute_savings_vs_full_pct": 74.06,
+      "total_risk_cost_savings_pct": 83.17
+    },
+    "alpha_sweep": {
+      "0.01": {
+        "tau_accept": 1.0001,
+        "feasible": false,
+        "dev_ucb_risk": 1.0,
+        "coverage": 0.0,
+        "selective_risk": 0.0,
+        "selective_accuracy": 1.0,
+        "auroc": 1.0,
+        "aurc": 0.0043,
+        "ece": 0.0084
+      },
+      "0.03": {
+        "tau_accept": 0.155,
+        "feasible": true,
+        "dev_ucb_risk": 0.0283,
+        "coverage": 0.9167,
+        "selective_risk": 0.0091,
+        "selective_accuracy": 0.9909,
+        "auroc": 1.0,
+        "aurc": 0.0043,
+        "ece": 0.0084
+      },
+      "0.05": {
+        "tau_accept": 0.096,
+        "feasible": true,
+        "dev_ucb_risk": 0.0466,
+        "coverage": 0.9208,
+        "selective_risk": 0.0136,
+        "selective_accuracy": 0.9864,
+        "auroc": 1.0,
+        "aurc": 0.0043,
+        "ece": 0.0084
+      },
+      "0.1": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0927,
+        "coverage": 0.9542,
+        "selective_risk": 0.048,
+        "selective_accuracy": 0.952,
+        "auroc": 1.0,
+        "aurc": 0.0043,
+        "ece": 0.0084
+      },
+      "0.15": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0927,
+        "coverage": 0.9542,
+        "selective_risk": 0.048,
+        "selective_accuracy": 0.952,
+        "auroc": 1.0,
+        "aurc": 0.0043,
+        "ece": 0.0084
+      },
+      "0.2": {
+        "tau_accept": 0.01,
+        "feasible": true,
+        "dev_ucb_risk": 0.0927,
+        "coverage": 0.9542,
+        "selective_risk": 0.048,
+        "selective_accuracy": 0.952,
+        "auroc": 1.0,
+        "aurc": 0.0043,
+        "ece": 0.0084
+      }
+    }
+  }
+}
