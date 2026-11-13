@@ -4,21 +4,19 @@ Enforces strict anti-leakage boundaries across Train (20%), Dev (30%), and Test 
 """
 
 import json
-import os
 from pathlib import Path
-from typing import Dict, List, Tuple
 
-from datasets import load_dataset
 import numpy as np
+from datasets import load_dataset
 from sklearn.model_selection import train_test_split
 
 
 def create_truthfulqa_splits(
     output_dir: str = "data/splits",
-    split_ratios: Tuple[float, float, float] = (0.20, 0.30, 0.50),
+    split_ratios: tuple[float, float, float] = (0.20, 0.30, 0.50),
     seed: int = 42,
     force_recreate: bool = False,
-) -> Dict[str, List[dict]]:
+) -> dict[str, list[dict]]:
     """
     Loads TruthfulQA (generation validation split, N=817) and creates stratified
     train/dev/test JSONL files preserving category distributions.
@@ -100,7 +98,7 @@ def create_fever_ood_split(
     eval_size: int = 1500,
     seed: int = 42,
     force_recreate: bool = False,
-) -> List[dict]:
+) -> list[dict]:
     """
     Creates a balanced binary (SUPPORTS vs REFUTES) out-of-domain evaluation subset
     from FEVER v1.0 paper_dev for zero-shot transfer testing.
@@ -145,12 +143,12 @@ def create_fever_ood_split(
     return fever_eval
 
 
-def save_jsonl(records: List[dict], filepath: Path) -> None:
+def save_jsonl(records: list[dict], filepath: Path) -> None:
     with open(filepath, "w", encoding="utf-8") as f:
         for rec in records:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
-def load_jsonl(filepath: Path) -> List[dict]:
-    with open(filepath, "r", encoding="utf-8") as f:
+def load_jsonl(filepath: Path) -> list[dict]:
+    with open(filepath, encoding="utf-8") as f:
         return [json.loads(line) for line in f if line.strip()]
