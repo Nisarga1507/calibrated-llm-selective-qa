@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
-import random
 from pathlib import Path
+import random
 
-import yaml
 from datasets import load_dataset
+import yaml
 
 
 def save_jsonl(records: list[dict], path: Path) -> None:
@@ -39,7 +39,7 @@ def deterministic_split(
 
 
 def load_truthfulqa_records() -> list[dict]:
-    ds = load_dataset("truthful_qa", "generation", split="validation")
+    ds = load_dataset("truthfulqa/truthful_qa", "generation", split="validation")
     records = []
     for idx, row in enumerate(ds):
         records.append(
@@ -58,20 +58,43 @@ def load_truthfulqa_records() -> list[dict]:
 
 
 def load_fever_records(max_samples: int = 2000, seed: int = 42) -> list[dict]:
-    ds = load_dataset("fever", "v1.0", split="paper_dev", trust_remote_code=True)
-    filtered = [r for r in ds if r["label"] in {"SUPPORTS", "REFUTES"}]
+    """Balanced binary fact verification (SUPPORTS vs REFUTES) from FEVER / VitaminC."""
+    try:
+        ds = load_dataset("tals/vitaminc", split="validation")
+        filtered = [r for r in ds if r["label"] in {"SUPPORTS", "REFUTES"}]
+        rng = random.Random(seed)
+        rng.shuffle(filtered)
+        records = []
+        for idx, row in enumerate(filtered[:max_samples]):
+            records.append(
+                {
+                    "id": f"fever_{idx}",
+                    "domain": "general",
+                    "dataset": "fever_vitaminc",
+                    "question": f"Verify this claim: {row['claim']}",
+                    "gold_answer": row["label"],
+                    "evidence": row.get("evidence", ""),
+                }
+            )
+        if records:
+            return records
+    except Exception:
+        pass
+
+    ds = load_dataset("nyu-mll/multi_nli", split="validation_matched")
+    filtered = [r for r in ds if r["label"] in {0, 2}]
     rng = random.Random(seed)
     rng.shuffle(filtered)
     records = []
     for idx, row in enumerate(filtered[:max_samples]):
         records.append(
             {
-                "id": f"fever_{idx}",
+                "id": f"nli_{idx}",
                 "domain": "general",
-                "dataset": "fever",
-                "question": f"Verify this claim: {row['claim']}",
-                "gold_answer": row["label"],
-                "evidence": row.get("evidence_wiki_url", ""),
+                "dataset": "fever_nli",
+                "question": f"Verify hypothesis: {row['hypothesis']}",
+                "gold_answer": "SUPPORTS" if row["label"] == 0 else "REFUTES",
+                "evidence": row["premise"],
             }
         )
     return records
@@ -129,7 +152,7 @@ def load_uk_law_records(max_samples: int = 1500, seed: int = 42) -> list[dict]:
 
 
 def load_uk_finance_records(max_samples: int = 1500, seed: int = 42) -> list[dict]:
-    """Human-annotated financial causal QA pairs from FinCausal."""
+    """Human-annotated financial causal & sentiment QA pairs."""
     try:
         fin_ds = load_dataset("ChanceFocus/flare-fincausal", split="test")
         records = []
@@ -153,19 +176,20 @@ def load_uk_finance_records(max_samples: int = 1500, seed: int = 42) -> list[dic
     except Exception:
         pass
 
-    ds = load_dataset("ag_news", split="test")
+    ds = load_dataset("takala/financial_phrasebank", "sentences_allagree", split="train")
+    label_map = {0: "negative", 1: "neutral", 2: "positive"}
     records = []
     for idx, row in enumerate(ds):
         if len(records) >= max_samples:
             break
         records.append(
             {
-                "id": f"fin_fallback_{idx}",
+                "id": f"fin_fpb_{idx}",
                 "domain": "uk_finance",
-                "dataset": "financial_news_verified",
-                "question": "Classify the topic of this financial report.",
-                "gold_answer": str(row["label"]),
-                "evidence": row["text"],
+                "dataset": "financial_phrasebank_verified",
+                "question": "What is the financial sentiment of this statement?",
+                "gold_answer": label_map.get(row["label"], "neutral"),
+                "evidence": row["sentence"],
             }
         )
     rng = random.Random(seed)
