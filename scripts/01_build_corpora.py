@@ -133,7 +133,9 @@ def load_uk_law_records(max_samples: int = 1200, seed: int = 42) -> list[dict]:
                         "id": f"uklaw_{task}_{idx}",
                         "domain": "uk_law",
                         "dataset": f"legalbench_{task}",
-                        "question": f"Determine the governing legal rule or category: {row['text']}",
+                        "question": (
+                            f"Determine the governing legal rule or category: {row['text']}"
+                        ),
                         "gold_answer": str(row["answer"]),
                         "evidence": str(row["text"]),
                     }
