@@ -58,7 +58,7 @@ def load_truthfulqa_records() -> list[dict]:
 
 
 def load_fever_records(max_samples: int = 2000, seed: int = 42) -> list[dict]:
-    """Balanced binary fact verification (SUPPORTS vs REFUTES) from FEVER / VitaminC."""
+    """Balanced binary fact verification (SUPPORTS vs REFUTES) from VitaminC / MultiNLI."""
     try:
         ds = load_dataset("tals/vitaminc", split="validation")
         filtered = [r for r in ds if r["label"] in {"SUPPORTS", "REFUTES"}]
@@ -121,104 +121,67 @@ def load_uk_healthcare_records() -> list[dict]:
     return records
 
 
-def load_uk_law_records(max_samples: int = 1500, seed: int = 42) -> list[dict]:
-    """Deterministic statutory metadata & legal clause verification."""
-    try:
-        ds = load_dataset("othertales/uklegislation", split="train", streaming=True)
-        records = []
-        for idx, row in enumerate(ds):
-            if len(records) >= max_samples:
-                break
-            title = str(row.get("title", "")).strip()
-            text = str(row.get("text", "")).strip()
-            year = str(row.get("year", "")).strip()
-            if not title or len(text) < 200 or not year.isdigit():
-                continue
-            snippet = text[:600].replace("\n", " ")
-            records.append(
-                {
-                    "id": f"uklaw_{idx}",
-                    "domain": "uk_law",
-                    "dataset": "uk_legislation_verified",
-                    "question": (
-                        f"In what year was the UK statutory instrument or Act '{title}' enacted?"
-                    ),
-                    "gold_answer": year,
-                    "evidence": f"{title} ({year}): {snippet}",
-                }
-            )
-        if records:
-            rng = random.Random(seed)
-            rng.shuffle(records)
-            return records
-    except Exception:
-        pass
-
-    # Fallback: LegalBench statutory & contract rule application (zero zstd dependency)
-    ds = load_dataset("nguha/legalbench", "abercrombie", split="test")
+def load_uk_law_records(max_samples: int = 1200, seed: int = 42) -> list[dict]:
+    """LegalBench contract & statutory jurisdiction verification (pure Parquet/TSV)."""
     records = []
-    for idx, row in enumerate(ds):
-        if len(records) >= max_samples:
-            break
-        records.append(
-            {
-                "id": f"uklaw_lb_{idx}",
-                "domain": "uk_law",
-                "dataset": "legalbench_verified",
-                "question": f"Classify the legal distinctiveness category: {row['text']}",
-                "gold_answer": str(row["answer"]),
-                "evidence": str(row["text"]),
-            }
-        )
+    for task in ("cuad_governing_law", "abercrombie"):
+        try:
+            ds = load_dataset("nguha/legalbench", task, split="test")
+            for idx, row in enumerate(ds):
+                records.append(
+                    {
+                        "id": f"uklaw_{task}_{idx}",
+                        "domain": "uk_law",
+                        "dataset": f"legalbench_{task}",
+                        "question": f"Determine the governing legal rule or category: {row['text']}",
+                        "gold_answer": str(row["answer"]),
+                        "evidence": str(row["text"]),
+                    }
+                )
+        except Exception:
+            continue
+
     rng = random.Random(seed)
     rng.shuffle(records)
-    return records
+    return records[:max_samples]
 
 
-def load_uk_finance_records(max_samples: int = 1500, seed: int = 42) -> list[dict]:
-    """Human-annotated financial causal & sentiment QA pairs."""
-    try:
-        fin_ds = load_dataset("ChanceFocus/flare-fincausal", split="test")
-        records = []
-        for idx, row in enumerate(fin_ds):
-            if len(records) >= max_samples:
-                break
-            records.append(
-                {
-                    "id": f"fin_{idx}",
-                    "domain": "uk_finance",
-                    "dataset": "fincausal",
-                    "question": row.get("query", row.get("text", "")),
-                    "gold_answer": str(row.get("answer", row.get("label", ""))),
-                    "evidence": str(row.get("text", "")),
-                }
-            )
-        if records:
-            rng = random.Random(seed)
-            rng.shuffle(records)
-            return records
-    except Exception:
-        pass
+def load_uk_finance_records(max_samples: int = 1200, seed: int = 42) -> list[dict]:
+    """Human-annotated financial QA pairs (pure Parquet, zero legacy scripts)."""
+    for repo_id, split_name, q_col, a_col, ctx_col in [
+        ("ibm-research/finqa", "test", "question", "answer", "pre_text"),
+        ("PatronusAI/financebench", "train", "question", "answer", "evidence_text"),
+        ("zeroshot/twitter-financial-news-sentiment", "validation", "text", "label", "text"),
+    ]:
+        try:
+            ds = load_dataset(repo_id, split=split_name)
+            records = []
+            for idx, row in enumerate(ds):
+                if len(records) >= max_samples:
+                    break
+                raw_ctx = row.get(ctx_col, "")
+                evidence = " ".join(raw_ctx) if isinstance(raw_ctx, list) else str(raw_ctx)
+                q_val = str(row.get(q_col, ""))
+                if repo_id == "zeroshot/twitter-financial-news-sentiment":
+                    q_val = f"Classify the financial market sentiment of this report: {q_val}"
+                records.append(
+                    {
+                        "id": f"fin_{idx}",
+                        "domain": "uk_finance",
+                        "dataset": repo_id.split("/")[-1],
+                        "question": q_val,
+                        "gold_answer": str(row.get(a_col, "")),
+                        "evidence": evidence[:1200],
+                    }
+                )
+            if records:
+                rng = random.Random(seed)
+                rng.shuffle(records)
+                return records
+        except Exception:
+            continue
 
-    ds = load_dataset("takala/financial_phrasebank", "sentences_allagree", split="train")
-    label_map = {0: "negative", 1: "neutral", 2: "positive"}
-    records = []
-    for idx, row in enumerate(ds):
-        if len(records) >= max_samples:
-            break
-        records.append(
-            {
-                "id": f"fin_fpb_{idx}",
-                "domain": "uk_finance",
-                "dataset": "financial_phrasebank_verified",
-                "question": "What is the financial sentiment of this statement?",
-                "gold_answer": label_map.get(row["label"], "neutral"),
-                "evidence": row["sentence"],
-            }
-        )
-    rng = random.Random(seed)
-    rng.shuffle(records)
-    return records
+    raise RuntimeError("Unable to load any Parquet financial QA dataset.")
 
 
 def main() -> None:
@@ -231,8 +194,8 @@ def main() -> None:
         "truthful_qa": load_truthfulqa_records,
         "fever": lambda: load_fever_records(max_samples=2000, seed=seed),
         "uk_healthcare": load_uk_healthcare_records,
-        "uk_law": lambda: load_uk_law_records(max_samples=1500, seed=seed),
-        "uk_finance": lambda: load_uk_finance_records(max_samples=1500, seed=seed),
+        "uk_law": lambda: load_uk_law_records(max_samples=1200, seed=seed),
+        "uk_finance": lambda: load_uk_finance_records(max_samples=1200, seed=seed),
     }
 
     for name, loader_fn in loaders.items():
