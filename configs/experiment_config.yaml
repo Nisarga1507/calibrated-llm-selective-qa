@@ -1,0 +1,29 @@
+seed: 42
+
+data:
+  primary_benchmark: "truthful_qa"
+  ood_benchmark: "fever"
+  split_ratios: [0.20, 0.30, 0.50]   # train / dev / test
+  fever_eval_size: 1500
+
+models:
+  generator_id: "meta-llama/Meta-Llama-3.1-8B-Instruct"
+  retriever_id: "BAAI/bge-base-en-v1.5"
+  nli_verifier_id: "MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli"
+  judge_id: "gpt-4o-mini"
+
+signals:
+  top_k_retrieval: 3
+  consistency_samples: 5
+  consistency_temp: 0.5
+  semantic_entropy_clusters: true
+
+calibration:
+  n_bins: 10
+  combiners: ["convex_linear", "l2_logistic", "mlp_16"]
+  calibrators: ["platt", "isotonic"]
+
+routing:
+  abstain_cost: 0.25
+  refine_cost: 0.08
+  error_cost: 1.00
