@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import random
+from pathlib import Path
 
-from datasets import load_dataset
 import yaml
+from datasets import load_dataset
 
 
 def save_jsonl(records: list[dict], path: Path) -> None:
@@ -116,7 +116,9 @@ def load_uk_law_records(max_samples: int = 1500, seed: int = 42) -> list[dict]:
                 "id": f"uklaw_{idx}",
                 "domain": "uk_law",
                 "dataset": "uk_legislation_verified",
-                "question": f"In what year was the UK statutory instrument or Act '{title}' enacted?",
+                "question": (
+                    f"In what year was the UK statutory instrument or Act '{title}' enacted?"
+                ),
                 "gold_answer": year,
                 "evidence": f"{title} ({year}): {snippet}",
             }
