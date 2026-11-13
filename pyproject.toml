@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ccr-router"
+version = "2.0.0"
+description = "3S-CCR: 3-Signal Conformal Cascading Router for Calibrated Hallucination Control"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Nisarga" }]
+dependencies = [
+    "numpy>=1.26.0",
+    "scipy>=1.11.0",
+    "pandas>=2.1.0",
+    "pyarrow>=14.0.0",
+    "pyyaml>=6.0.1",
+    "scikit-learn>=1.3.0",
+    "lightgbm>=4.1.0",
+    "torch>=2.2.0",
+    "transformers>=4.38.0",
+    "datasets>=2.17.0",
+    "faiss-cpu>=1.7.4",
+    "rank-bm25>=0.2.2",
+    "sentence-transformers>=2.5.0",
+    "statsmodels>=0.14.0",
+    "matplotlib>=3.8.0",
+    "seaborn>=0.13.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.27.0",
+    "pydantic>=2.6.0",
+    "streamlit>=1.32.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.3.0",
+    "httpx>=0.27.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]

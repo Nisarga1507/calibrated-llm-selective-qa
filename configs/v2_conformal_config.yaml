@@ -1,0 +1,40 @@
+project:
+  name: "3S-CCR-v2"
+  seed: 42
+  max_refinements: 1
+
+models:
+  generator_id: "mistralai/Mistral-7B-Instruct-v0.3"
+  nli_cross_encoder_id: "MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli"
+  dense_retriever_id: "BAAI/bge-base-en-v1.5"
+  semantic_samples_m: 5
+  semantic_temperature: 0.7
+
+cascade:
+  tau_fast_lo: 0.20
+  tau_fast_hi: 0.85
+
+conformal_ltt:
+  delta: 0.05
+  alpha_grid: [0.01, 0.03, 0.05, 0.10, 0.15, 0.20]
+  default_alpha: 0.05
+
+datasets:
+  splits:
+    train: 0.60
+    dev_calibration: 0.20
+    test: 0.20
+  benchmarks:
+    - "truthful_qa"
+    - "fever"
+    - "pubmedqa_pqa_labeled"
+    - "uk_legislation_verified"
+    - "fincausal"
+
+uk_enterprise_economics:
+  currency: "GBP"
+  stage1_cost_gbp: 0.0015
+  stage2_cost_gbp: 0.0045
+  refine_cost_gbp: 0.0020
+  human_review_cost_gbp: 18.50
+  hallucination_penalty_gbp: 500.00
