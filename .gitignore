@@ -12,3 +12,4 @@ data/logs/*
 *.safetensors
 .DS_Store
 *.egg-info/
+*.egg-info/
