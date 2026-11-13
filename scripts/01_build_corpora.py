@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import random
+from pathlib import Path
 
-from datasets import load_dataset
 import yaml
+from datasets import load_dataset
 
 
 def save_jsonl(records: list[dict], path: Path) -> None:
@@ -122,28 +122,52 @@ def load_uk_healthcare_records() -> list[dict]:
 
 
 def load_uk_law_records(max_samples: int = 1500, seed: int = 42) -> list[dict]:
-    """Deterministic statutory metadata & section verification from UK Legislation."""
-    ds = load_dataset("othertales/uklegislation", split="train", streaming=True)
+    """Deterministic statutory metadata & legal clause verification."""
+    try:
+        ds = load_dataset("othertales/uklegislation", split="train", streaming=True)
+        records = []
+        for idx, row in enumerate(ds):
+            if len(records) >= max_samples:
+                break
+            title = str(row.get("title", "")).strip()
+            text = str(row.get("text", "")).strip()
+            year = str(row.get("year", "")).strip()
+            if not title or len(text) < 200 or not year.isdigit():
+                continue
+            snippet = text[:600].replace("\n", " ")
+            records.append(
+                {
+                    "id": f"uklaw_{idx}",
+                    "domain": "uk_law",
+                    "dataset": "uk_legislation_verified",
+                    "question": (
+                        f"In what year was the UK statutory instrument or Act '{title}' enacted?"
+                    ),
+                    "gold_answer": year,
+                    "evidence": f"{title} ({year}): {snippet}",
+                }
+            )
+        if records:
+            rng = random.Random(seed)
+            rng.shuffle(records)
+            return records
+    except Exception:
+        pass
+
+    # Fallback: LegalBench statutory & contract rule application (zero zstd dependency)
+    ds = load_dataset("nguha/legalbench", "abercrombie", split="test")
     records = []
     for idx, row in enumerate(ds):
         if len(records) >= max_samples:
             break
-        title = str(row.get("title", "")).strip()
-        text = str(row.get("text", "")).strip()
-        year = str(row.get("year", "")).strip()
-        if not title or len(text) < 200 or not year.isdigit():
-            continue
-        snippet = text[:600].replace("\n", " ")
         records.append(
             {
-                "id": f"uklaw_{idx}",
+                "id": f"uklaw_lb_{idx}",
                 "domain": "uk_law",
-                "dataset": "uk_legislation_verified",
-                "question": (
-                    f"In what year was the UK statutory instrument or Act '{title}' enacted?"
-                ),
-                "gold_answer": year,
-                "evidence": f"{title} ({year}): {snippet}",
+                "dataset": "legalbench_verified",
+                "question": f"Classify the legal distinctiveness category: {row['text']}",
+                "gold_answer": str(row["answer"]),
+                "evidence": str(row["text"]),
             }
         )
     rng = random.Random(seed)
