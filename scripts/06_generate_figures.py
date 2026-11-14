@@ -7,14 +7,6 @@ import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-plt.rcParams.update({
-    'font.size': 12,
-    'axes.titlesize': 13,
-    'axes.labelsize': 12,
-    'xtick.labelsize': 11,
-    'ytick.labelsize': 11,
-    'legend.fontsize': 10,
-})
 import numpy as np
 
 LABELS = {
