@@ -1,12 +1,11 @@
-cat << 'EOF' > README.md
 # 3S-CCR: Three-Signal Conformal Cascading Router for Selective QA
 
-A calibrated two-stage selective question-answering framework that combines **internal token entropy ($S_{\text{logit}}$)**, **semantic consistency ($S_{\text{sem}}$)**, and **hybrid RRF + NLI retrieval grounding ($S_{\text{ret}}$)** under **Learn-Then-Test (LTT) finite-sample conformal risk control** ($\alpha = 0.05, \delta = 0.05$).
+A calibrated two-stage selective question-answering framework combining internal token entropy ($S_{\text{logit}}$), semantic consistency ($S_{\text{sem}}$), and hybrid RRF + NLI retrieval grounding ($S_{\text{ret}}$) under Learn-Then-Test (LTT) finite-sample conformal risk control ($\alpha = 0.05, \delta = 0.05$).
 
 ## Architecture Overview
 
-1. **Stage 1 (Fast Gate):** Extracts token log-probability and top-2 margin confidence ($S_{\text{logit}}$) to immediately accept high-confidence queries or abstain on overtly uncertain ones—bypassing expensive multi-sample generation and retrieval on 70%–87% of queries.
-2. **Stage 2 (Escalation Cascade):** Routes ambiguous boundary queries ($\tau_{\text{fast,lo}} \le \hat{p}_1 < \tau_{\text{fast,hi}}$) to $M=5$ stochastic semantic clustering ($S_{\text{sem}}$) and Reciprocal Rank Fusion (RRF) evidence verification ($S_{\text{ret}}$).
+1. **Stage 1 (Fast Gate):** Uses token log-probability and top-2 margin confidence ($S_{\text{logit}}$) to immediately accept high-confidence queries or abstain on overtly uncertain ones.
+2. **Stage 2 (Escalation Cascade):** Routes ambiguous boundary queries to $M=5$ stochastic semantic clustering ($S_{\text{sem}}$) and Reciprocal Rank Fusion (RRF) evidence verification ($S_{\text{ret}}$).
 3. **Conformal LTT Calibration:** Guarantees empirical selective risk $\le \alpha$ via Clopper-Pearson upper confidence bounds on a held-out calibration split (`dev_calibration.jsonl`).
 
 ## Held-Out Test Results ($\alpha = 0.05$)
@@ -32,7 +31,6 @@ A calibrated two-stage selective question-answering framework that combines **in
 
 ## Reproducing the Pipeline
 
-```bash
-python scripts/run_pipeline.py
-PYTHONPATH=scripts python scripts/05_run_statistical_suite.py
-python scripts/06_generate_figures.py
+    python scripts/run_pipeline.py
+    PYTHONPATH=scripts python scripts/05_run_statistical_suite.py
+    python scripts/06_generate_figures.py
