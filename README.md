@@ -10,7 +10,7 @@ A calibrated two-stage selective question-answering framework combining internal
 
 ## Held-Out Test Results ($\alpha = 0.05$)
 
-| Benchmark | Test $N$ | Selective Risk | Coverage | Selective Acc | AUROC | $\Delta\text{AURC}$ vs $S_{\text{logit}}$ | Bootstrap $p$ | GBP Savings |
+| Benchmark | Test $N$ | Selective Risk | Coverage | Selective Acc | AUROC | Delta AURC | Bootstrap p | GBP Savings |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **TruthfulQA** | 164 | **0.000** | 0.0% | 100.0% | 0.906 | **+0.1723** | **0.0005** | **91.3%** |
 | **FEVER** | 400 | **0.043** | 94.0% | **95.7%** | 0.863 | **+0.0195** | **0.0130** | **57.8%** |
@@ -34,3 +34,11 @@ A calibrated two-stage selective question-answering framework combining internal
     python scripts/run_pipeline.py
     PYTHONPATH=scripts python scripts/05_run_statistical_suite.py
     python scripts/06_generate_figures.py
+
+### Running the FastAPI Service (v2.1)
+
+```bash
+uvicorn api:app --reload
+# Interactive Swagger UI: http://127.0.0.1:8000/docs
+# Endpoints: GET /health, POST /v2/route, POST /v2/generate-and-route
+```
