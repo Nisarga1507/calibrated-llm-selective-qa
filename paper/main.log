@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.16)  14 NOV 2026 15:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.16)  14 NOV 2026 16:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -497,13 +497,6 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
 
-LaTeX Warning: Citation `ovadia2019can' on page 1 undefined on input line 36.
-
-
-LaTeX Warning: Citation `hendrycks2017baseline' on page 1 undefined on input li
-ne 36.
-
-
 Underfull \hbox (badness 1824) in paragraph at lines 36--37
 \OT1/ptm/m/n/10 pro-vide no distribution-free up-per bound on post-
  []
@@ -554,16 +547,20 @@ ocal/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}
 
 ]
 
-LaTeX Warning: Citation `quach2024conformal' on page 2 undefined on input line 
-57.
+LaTeX Warning: Citation `lei2018distribution' on page 2 undefined on input line
+ 57.
 
 
-LaTeX Warning: Citation `mohri2024language' on page 2 undefined on input line 5
-7.
+LaTeX Warning: Citation `romano2020classification' on page 2 undefined on input
+ line 57.
 
 
-LaTeX Warning: Citation `kumar2023conformal' on page 2 undefined on input line 
-57.
+LaTeX Warning: Citation `bates2021distribution' on page 2 undefined on input li
+ne 57.
+
+
+LaTeX Warning: Citation `angelopoulos2024conformalrisk' on page 2 undefined on 
+input line 57.
 
 
 
@@ -598,24 +595,7 @@ put line 104.
 
 [2]
 
-LaTeX Warning: Citation `lin2022truthfulqa' on page 3 undefined on input line 1
-52.
-
-
-LaTeX Warning: Citation `thorne2018fever' on page 3 undefined on input line 153
-.
-
-
-
-
-LaTeX Warning: Citation `lin2022truthfulqa' on page 3 undefined on input line 1
-73.
-
-
-LaTeX Warning: Citation `thorne2018fever' on page 3 undefined on input line 174
-.
-
-<../results/figures/fig1_risk_coverage_alpha_sweep.png, id=235, 903.375pt x 361
+<../results/figures/fig1_risk_coverage_alpha_sweep.png, id=236, 903.375pt x 361
 .35pt>
 File: ../results/figures/fig1_risk_coverage_alpha_sweep.png Graphic file (type 
 png)
@@ -644,14 +624,14 @@ Overfull \hbox (14.88141pt too wide) in paragraph at lines 199--209
  [][] 
  []
 
-<../results/figures/fig2_ablation_auroc_aurc.png, id=242, 975.645pt x 375.804pt
+<../results/figures/fig2_ablation_auroc_aurc.png, id=243, 975.645pt x 375.804pt
 >
 File: ../results/figures/fig2_ablation_auroc_aurc.png Graphic file (type png)
 <use ../results/figures/fig2_ablation_auroc_aurc.png>
 Package pdftex.def Info: ../results/figures/fig2_ablation_auroc_aurc.png  used 
 on input line 213.
 (pdftex.def)             Requested size: 252.0pt x 97.06448pt.
-<../results/figures/fig3_uk_enterprise_economics.png, id=243, 758.835pt x 361.3
+<../results/figures/fig3_uk_enterprise_economics.png, id=244, 758.835pt x 361.3
 5pt>
 File: ../results/figures/fig3_uk_enterprise_economics.png Graphic file (type pn
 g)
@@ -680,9 +660,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 230--231
 \OML/cmm/m/it/10 S[]$ \OT1/ptm/m/n/10 dis-tri-bu-tion drift alerts per-sisted t
 o
  []
-
-
-LaTeX Warning: Citation `ovadia2019can' on page 3 undefined on input line 254.
 
 
 
@@ -716,62 +693,43 @@ L3 programming layer <2025-01-18>
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 4A3011C5AE4ADC1718D6C0ABD204E428;3850.
  ) 
 Here is how much of TeX's memory you used:
- 11402 strings out of 473190
- 179393 string characters out of 5715800
- 614953 words of memory out of 5000000
- 34367 multiletter control sequences out of 15000+600000
+ 11394 strings out of 473190
+ 179179 string characters out of 5715800
+ 614923 words of memory out of 5000000
+ 34363 multiletter control sequences out of 15000+600000
  613980 words of font info for 139 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,13n,79p,1741b,587s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-pdfTeX warning (dest): name{cite.angelopoulos2024conformalrisk} has been refere
-nced but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.bates2021distribution} has been referenced but
- does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.romano2020classification} has been referenced 
-but does not exist, replaced by a fixed one
-
-
-pdfTeX warning (dest): name{cite.lei2018distribution} has been referenced but d
-oes not exist, replaced by a fixed one
-
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
-/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
-usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></us
-r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
-local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/lo
-cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/loca
-l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/
-texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/tex
-live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
-e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2
-025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2025
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2025/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf-d
-ist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/tex
-mf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2025/texmf-dist/
-fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type
-1/urw/times/utmbi8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/tim
-es/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a
-.pfb>
-Output written on main.pdf (5 pages, 1011641 bytes).
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
+></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
+usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></us
+r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/
+local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/lo
+cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
+l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/t
+exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texl
+ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
+/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/20
+25/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/202
+5/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2025/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf
+-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/t
+exmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2025/texmf-dis
+t/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/ty
+pe1/urw/times/utmbi8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/t
+imes/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri
+8a.pfb>
+Output written on main.pdf (5 pages, 1011668 bytes).
 PDF statistics:
- 415 PDF objects out of 1000 (max. 8388607)
- 354 compressed objects within 4 object streams
- 117 named destinations out of 1000 (max. 500000)
+ 414 PDF objects out of 1000 (max. 8388607)
+ 353 compressed objects within 4 object streams
+ 113 named destinations out of 1000 (max. 500000)
  160 words of extra memory for PDF output out of 10000 (max. 10000000)
 
