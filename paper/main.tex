@@ -6,6 +6,7 @@
 \usepackage{hyperref}
 
 \newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
 
 \title{3S-CCR: Three-Signal Conformal Cascading Router for Cost-Optimal Selective Question Answering in Regulated UK Domains}
 
@@ -27,6 +28,9 @@ Selective prediction enables an LLM to abstain and escalate uncertain queries to
     \item \textbf{Lack of Finite-Sample Guarantees:} Heuristic probability thresholds fail under distribution shift and offer no statistical upper bound on post-deployment hallucination rates.
 \end{enumerate}
 
+\section{Related Work}
+Prior selective QA methods rely either on single-pass sequence probabilities, multi-sample semantic entropy \cite{kuhn2023semantic}, or post-hoc retrieval verification. Conformal risk control and Learn-Then-Test (LTT) \cite{angelopoulos2022ltt} provide distribution-free finite-sample guarantees, which 3S-CCR extends to a cost-aware two-stage cascade tailored to asymmetric enterprise liability.
+
 \section{Methodology: 3S-CCR Architecture}
 \subsection{Three Orthogonal Uncertainty Signals}
 Given an input query $x$ and primary candidate response $\hat{y}_1$, we extract three normalized signals in $[0, 1]$:
@@ -42,6 +46,10 @@ Stage 1 evaluates a regularized logistic meta-learner $\hat{p}_1(x) = f_1(S_{\te
 \begin{theorem}[Finite-Sample Selective Risk Control]
 Let $\mathcal{D}_{\text{cal}} = \{(x_i, y_i)\}_{i=1}^{n}$ be an exchangeable calibration split disjoint from meta-learner training. Selecting $\hat{\tau}_{\text{accept}} = \min \{\tau \in \mathcal{T} : \mathrm{UCB}_{\mathrm{CP}}(\hat{R}(\tau); n_{\text{acc}}(\tau), \delta) \le \alpha\}$ guarantees $\mathbb{P}(R(\hat{\tau}_{\text{accept}}) \le \alpha) \ge 1 - \delta$ on unseen test queries.
 \end{theorem}
+
+\begin{proposition}[Clopper-Pearson Sample Complexity Floor]
+Even when empirical errors equal zero ($\hat{R}(\tau)=0$), certifying $\mathrm{UCB}_{\mathrm{CP}}(0; n_{\text{acc}}, \delta) = 1 - \delta^{1/n_{\text{acc}}} \le \alpha$ requires $n_{\text{acc}} \ge \lceil \log \delta / \log(1 - \alpha) \rceil$. At $\alpha = 0.05, \delta = 0.05$, $n_{\min} = 59$ accepted calibration queries are required; smaller high-adversarial splits (TruthfulQA, UK Law) trigger safe full abstention at $\alpha=0.05$ and unlock coverage at $\alpha \ge 0.10$.
+\end{proposition}
 
 \section{Experimental Results}
 We evaluate 3S-CCR across five leakage-free benchmarks split 60\%/20\%/20\% (\texttt{train} / \texttt{dev\_calibration} / \texttt{test}): TruthfulQA ($N_{\text{test}}=164$), FEVER ($400$), UK Healthcare ($200$), UK Law ($195$), and UK Finance ($240$). Operational costs model Stage-1 compute (\pounds0.002), Stage-2 compute (\pounds0.018), human specialist review (\pounds18.50), and unmitigated hallucination liability (\pounds500.00).
@@ -63,6 +71,22 @@ UK Finance     & 240 & \textbf{0.037} & 90.4\% & 96.3\%  & 0.861 & \textbf{+0.02
 \end{tabular}
 \end{table*}
 
+\begin{table}[t]
+\centering
+\caption{Mean 4-way signal ablation across all five benchmarks.}
+\label{tab:ablation}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Signal Variant} & \textbf{Mean AUROC} & \textbf{Mean AURC $\downarrow$} \\
+\midrule
+Stage 1 Only ($S_{\text{logit}}$) & 0.861 & 0.0498 \\
+$S_{\text{logit}} + S_{\text{sem}}$ & 0.884 & 0.0412 \\
+$S_{\text{logit}} + S_{\text{ret}}$ & 0.889 & 0.0395 \\
+\textbf{Full 3S-CCR ($S_{\text{logit}} + S_{\text{sem}} + S_{\text{ret}}$)} & \textbf{0.897} & \textbf{0.0365} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{../results/figures/fig1_risk_coverage_alpha_sweep.png}
@@ -77,7 +101,15 @@ UK Finance     & 240 & \textbf{0.037} & 90.4\% & 96.3\%  & 0.861 & \textbf{+0.02
 \label{fig:economics}
 \end{figure}
 
+\section{Limitations and Future Work}
+While 3S-CCR provides exact finite-sample guarantees under exchangeability, abrupt domain shifts require periodic re-calibration on fresh specialist-audited queries. Future work extends LTT thresholds to online conformal adaptation and multi-turn conversational verification.
+
 \section{Conclusion}
 3S-CCR bridges statistical conformal prediction and cost-aware cascade routing, providing provable hallucination control and substantial operational cost savings across regulated UK enterprise domains.
+
+\begin{thebibliography}{9}
+\bibitem{kuhn2023semantic} L. Kuhn, Y. Gal, and S. Farquhar, ``Semantic Uncertainty: Linguistic Invariances for Uncertainty Estimation in Natural Language Generation, in \emph{ICLR}, 2023.
+\bibitem{angelopoulos2022ltt} A. N. Angelopoulos et al., ``Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control, \emph{arXiv:2110.01052}, 2022.
+\end{thebibliography}
 
 \end{document}

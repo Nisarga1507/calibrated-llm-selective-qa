@@ -1,4 +1,4 @@
-"""Integration tests for the 3S-CCR FastAPI routing service."""
+"""Integration tests for the 3S-CCR FastAPI routing and generation service."""
 
 from fastapi.testclient import TestClient
 
@@ -53,4 +53,22 @@ def test_health_and_routing_cascade() -> None:
         assert esc_data["stage_executed"] == 2
         assert esc_data["s_sem"] is not None
         assert esc_data["s_ret"] is not None
-        assert esc_data["decision"] in {"ACCEPT", "ABSTAIN_ESCALATE_HUMAN"}
+        assert esc_data["decision"] == "ABSTAIN_ESCALATE_HUMAN"
+
+
+def test_end_to_end_generate_and_route() -> None:
+    with TestClient(app) as client:
+        res = client.post(
+            "/v2/generate-and-route",
+            json={
+                "domain": "uk_law",
+                "question": "What is the experimental unverified statutory threshold?",
+                "num_samples": 5,
+                "target_alpha": 0.05,
+            },
+        )
+        assert res.status_code == 200
+        data = res.json()
+        assert data["stage_executed"] == 2
+        assert data["decision"] == "ABSTAIN_ESCALATE_HUMAN"
+        assert data["candidate_answer"]
