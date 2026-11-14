@@ -126,7 +126,7 @@ def route_query(req: RouteRequest) -> RouteResponse:
     alpha_key = str(round(req.target_alpha, 2))
     tau_accept = float(ds_sweep.get(alpha_key, {}).get("tau_accept", 0.85))
 
-    router = ConformalCascadingRouter(
+    ConformalCascadingRouter(
         tau_fast_lo=tau_lo,
         tau_fast_hi=tau_hi,
         delta=float(cfg["conformal_ltt"]["delta"]),
