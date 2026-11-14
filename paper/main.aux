@@ -2,25 +2,178 @@
 \providecommand\hyper@newdestlabel[2]{}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{chow1970optimum}
+\citation{el2010foundations}
+\citation{geifman2017selective}
+\citation{ji2023survey}
+\citation{huang2023survey}
+\citation{guo2017calibration}
+\citation{kadavath2022language}
+\citation{jiang2021can}
+\citation{azaria2023internal}
+\citation{burns2023discovering}
 \citation{kuhn2023semantic}
+\citation{farquhar2024detecting}
+\citation{lewis2020retrieval}
+\citation{manakul2023selfcheckgpt}
+\citation{min2023factscore}
+\citation{ovadia2019can}
+\citation{hendrycks2017baseline}
+\citation{geifman2019selectivenet}
+\citation{jaeger2023call}
+\citation{clopper1934use}
 \citation{angelopoulos2022ltt}
+\citation{guo2017calibration}
+\citation{platt1999probabilistic}
+\citation{niculescu2005predicting}
+\citation{kull2019beyond}
+\citation{kadavath2022language}
+\citation{malinin2021uncertainty}
+\citation{xiao2021hallucination}
+\citation{si2023prompting}
+\citation{lin2022teaching}
+\citation{tian2023just}
+\citation{xiong2024can}
+\citation{azaria2023internal}
+\citation{burns2023discovering}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{1}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {III}Methodology: 3S-CCR Architecture}{1}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Three Orthogonal Uncertainty Signals}{1}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Two-Stage Cascade \& LTT Conformal Guarantee}{1}{subsection.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Results}{1}{section.4}\protected@file@percent }
-\bibcite{kuhn2023semantic}{1}
-\bibcite{angelopoulos2022ltt}{2}
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Held-out test performance of 3S-CCR ($\alpha = 0.05, \delta = 0.05$) and paired bootstrap significance ($B=2,000$) against $S_{\text  {logit}}$.}}{2}{table.1}\protected@file@percent }
-\newlabel{tab:main_results}{{I}{2}{Held-out test performance of 3S-CCR ($\alpha = 0.05, \delta = 0.05$) and paired bootstrap significance ($B=2,000$) against $S_{\text {logit}}$}{table.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Mean 4-way signal ablation across all five benchmarks.}}{2}{table.2}\protected@file@percent }
-\newlabel{tab:ablation}{{II}{2}{Mean 4-way signal ablation across all five benchmarks}{table.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Empirical selective risk vs.\ target $\alpha $ across all five domains, demonstrating strict adherence below the $y=\alpha $ risk boundary.}}{2}{figure.1}\protected@file@percent }
-\newlabel{fig:risk_sweep}{{1}{2}{Empirical selective risk vs.\ target $\alpha $ across all five domains, demonstrating strict adherence below the $y=\alpha $ risk boundary}{figure.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Limitations and Future Work}{2}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{2}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{References}{2}{section*.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Expected operational risk cost per 1,000 queries (\pounds  k GBP) comparing uncalibrated always-accept routing against 3S-CCR.}}{2}{figure.2}\protected@file@percent }
-\newlabel{fig:economics}{{2}{2}{Expected operational risk cost per 1,000 queries (\pounds k GBP) comparing uncalibrated always-accept routing against 3S-CCR}{figure.2}{}}
-\gdef \@abspage@last{2}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}White-Box and Black-Box LLM Uncertainty}{1}{subsection.2.1}\protected@file@percent }
+\citation{kuhn2023semantic}
+\citation{farquhar2024detecting}
+\citation{lin2024generating}
+\citation{manakul2023selfcheckgpt}
+\citation{dhuliawala2024chain}
+\citation{lewis2020retrieval}
+\citation{guu2020realm}
+\citation{izacard2021leveraging}
+\citation{borgeaud2022improving}
+\citation{robertson2009probabilistic}
+\citation{karpukhin2020dense}
+\citation{cormack2009rrf}
+\citation{williams2018broad}
+\citation{bowman2015large}
+\citation{honovich2022true}
+\citation{min2023factscore}
+\citation{asai2024selfrag}
+\citation{chow1970optimum}
+\citation{el2010foundations}
+\citation{wiener2011agnostic}
+\citation{geifman2017selective}
+\citation{kamath2020selective}
+\citation{varshney2022investigating}
+\citation{vovk2005algorithmic}
+\citation{shafer2008tutorial}
+\citation{lei2018distribution}
+\citation{romano2020classification}
+\citation{angelopoulos2022ltt}
+\citation{angelopoulos2024conformal}
+\citation{bates2021distribution}
+\citation{angelopoulos2024conformalrisk}
+\citation{quach2024conformal}
+\citation{mohri2024language}
+\citation{kumar2023conformal}
+\citation{kuhn2023semantic}
+\citation{cormack2009rrf}
+\citation{robertson2009probabilistic}
+\citation{karpukhin2020dense}
+\citation{clopper1934use}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Retrieval-Augmented Verification}{2}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Conformal Risk Control and Selective Classification}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Methodology: 3S-CCR Architecture}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Problem Formulation}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Three Orthogonal Uncertainty Signals}{2}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Two-Stage Cascading Router}{2}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}LTT Conformal Risk Control \& Sample Complexity}{2}{subsection.3.4}\protected@file@percent }
+\citation{lin2022truthfulqa}
+\citation{thorne2018fever}
+\citation{jin2019pubmedqa}
+\citation{pal2022medmcqa}
+\citation{chalkidis2022lexglue}
+\citation{chen2021finqa}
+\citation{lin2022truthfulqa}
+\citation{thorne2018fever}
+\citation{efron1994introduction}
+\citation{mcnemar1947note}
+\citation{dietterich1998approximate}
+\citation{touvron2023llama}
+\citation{jiang2023mistral}
+\citation{ovadia2019can}
+\citation{gibbs2021adaptive}
+\citation{podkopaev2021distribution}
+\citation{amodei2016concrete}
+\citation{bommasani2021opportunities}
+\citation{gibbs2021adaptive}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces 3S-CCR Two-Stage Conformal Cascade}}{3}{algorithm.1}\protected@file@percent }
+\newlabel{alg:cascade}{{1}{3}{Two-Stage Cascading Router}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Setup \& Benchmark Results}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Datasets, Leakage-Free Splits, and UK Cost Model}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Held-Out Risk Control & Economic Impact}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Four-Way Signal Ablation}{3}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}Production Microservice \& Live Telemetry}{3}{section.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Held-out test performance of 3S-CCR ($\alpha = 0.05, \delta = 0.05$) and paired bootstrap significance ($B=2,000$) against $S_{\text  {logit}}$.}}{4}{table.1}\protected@file@percent }
+\newlabel{tab:main_results}{{I}{4}{Held-out test performance of 3S-CCR ($\alpha = 0.05, \delta = 0.05$) and paired bootstrap significance ($B=2,000$) against $S_{\text {logit}}$}{table.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Empirical selective risk vs.\ target $\alpha $ (left) and accepted query coverage (right) across all five benchmarks, demonstrating 100\% adherence below the $y=\alpha $ risk boundary and safe finite-sample abstention on small adversarial calibration splits at $\alpha = 0.05$.}}{4}{figure.1}\protected@file@percent }
+\newlabel{fig:risk_sweep}{{1}{4}{Empirical selective risk vs.\ target $\alpha $ (left) and accepted query coverage (right) across all five benchmarks, demonstrating 100\% adherence below the $y=\alpha $ risk boundary and safe finite-sample abstention on small adversarial calibration splits at $\alpha = 0.05$}{figure.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Mean 4-way signal ablation across all five benchmarks.}}{4}{table.2}\protected@file@percent }
+\newlabel{tab:ablation}{{II}{4}{Mean 4-way signal ablation across all five benchmarks}{table.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Four-way signal ablation comparing AUROC (left) and AURC (right) across all five domains.}}{4}{figure.2}\protected@file@percent }
+\newlabel{fig:ablation}{{2}{4}{Four-way signal ablation comparing AUROC (left) and AURC (right) across all five domains}{figure.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Limitations and Governance Considerations}{4}{section.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Expected operational risk cost per 1,000 queries (\pounds  k GBP) comparing uncalibrated always-accept routing against 3S-CCR ($\alpha =0.05$).}}{4}{figure.3}\protected@file@percent }
+\newlabel{fig:economics}{{3}{4}{Expected operational risk cost per 1,000 queries (\pounds k GBP) comparing uncalibrated always-accept routing against 3S-CCR ($\alpha =0.05$)}{figure.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{4}{section.7}\protected@file@percent }
+\bibcite{chow1970optimum}{1}
+\bibcite{el2010foundations}{2}
+\bibcite{wiener2011agnostic}{3}
+\bibcite{geifman2017selective}{4}
+\bibcite{geifman2019selectivenet}{5}
+\bibcite{kamath2020selective}{6}
+\bibcite{varshney2022investigating}{7}
+\bibcite{jaeger2023call}{8}
+\bibcite{ji2023survey}{9}
+\bibcite{huang2023survey}{10}
+\bibcite{guo2017calibration}{11}
+\bibcite{platt1999probabilistic}{12}
+\bibcite{niculescu2005predicting}{13}
+\bibcite{kull2019beyond}{14}
+\bibcite{kadavath2022language}{15}
+\bibcite{jiang2021can}{16}
+\bibcite{malinin2021uncertainty}{17}
+\bibcite{xiao2021hallucination}{18}
+\bibcite{si2023prompting}{19}
+\bibcite{lin2022teaching}{20}
+\bibcite{tian2023just}{21}
+\bibcite{xiong2024can}{22}
+\bibcite{azaria2023internal}{23}
+\bibcite{burns2023discovering}{24}
+\bibcite{kuhn2023semantic}{25}
+\bibcite{farquhar2024detecting}{26}
+\bibcite{lin2024generating}{27}
+\bibcite{manakul2023selfcheckgpt}{28}
+\bibcite{dhuliawala2024chain}{29}
+\bibcite{lewis2020retrieval}{30}
+\bibcite{guu2020realm}{31}
+\bibcite{izacard2021leveraging}{32}
+\bibcite{borgeaud2022improving}{33}
+\bibcite{robertson2009probabilistic}{34}
+\bibcite{karpukhin2020dense}{35}
+\bibcite{cormack2009rrf}{36}
+\bibcite{williams2018broad}{37}
+\bibcite{bowman2015large}{38}
+\bibcite{honovich2022true}{39}
+\bibcite{min2023factscore}{40}
+\bibcite{asai2024selfrag}{41}
+\bibcite{vovk2005algorithmic}{42}
+\bibcite{shafer2008tutorial}{43}
+\bibcite{lei2018distribution}{44}
+\bibcite{romano2020classification}{45}
+\bibcite{clopper1934use}{46}
+\bibcite{angelopoulos2022ltt}{47}
+\bibcite{angelopoulos2024conformal}{48}
+\bibcite{bates2021distribution}{49}
+\bibcite{angelopoulos2024conformalrisk}{50}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Live FastAPI microservice latency and drift telemetry (\texttt  {/v2/metrics}).}}{5}{table.3}\protected@file@percent }
+\newlabel{tab:telemetry}{{III}{5}{Live FastAPI microservice latency and drift telemetry (\texttt {/v2/metrics})}{table.3}{}}
+\@writefile{toc}{\contentsline {section}{References}{5}{section*.1}\protected@file@percent }
+\gdef \@abspage@last{5}
