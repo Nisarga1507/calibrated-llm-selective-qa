@@ -3,56 +3,163 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage{hyperref}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
 
 \title{3S-CCR: Three-Signal Conformal Cascading Router for Cost-Optimal Selective Question Answering in Regulated UK Domains}
 
 \author{\IEEEauthorblockN{Nisarga}
-\IEEEauthorblockA{Calibrated Selective QA Systems \\
-\texttt{https://github.com/Nisarga1507/calibrated-llm-selective-qa}}}
+\IEEEauthorblockA{School of Computing, Newcastle University, Newcastle upon Tyne, United Kingdom \\
+Code \& Reproducibility Artifacts: \texttt{https://github.com/Nisarga1507/calibrated-llm-selective-qa}}}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Deploying Large Language Models (LLMs) in regulated sectors such as healthcare, statutory law, and financial compliance requires strict finite-sample bounds on hallucination risk alongside predictable inference budgets. Single-signal uncertainty estimators—such as token log-probabilities—frequently suffer from overconfident hallucinations, whereas multi-sample semantic clustering and dense evidence verification incur prohibitive latency on every query. We introduce \textbf{3S-CCR} (\emph{Three-Signal Conformal Cascading Router}), a two-stage selective QA architecture that gates routine queries via fast token-level confidence ($S_{\text{logit}}$) and escalates boundary queries to stochastic semantic consistency ($S_{\text{sem}}$) and hybrid Reciprocal Rank Fusion (RRF) evidence grounding ($S_{\text{ret}}$). Using Learn-Then-Test (LTT) calibration with exact Clopper-Pearson upper confidence bounds, 3S-CCR guarantees empirical selective risk $\le \alpha$ ($\alpha = 0.05, \delta = 0.05$) without sacrificing Stage-1 efficiency. Across five benchmarks ($N = 5,988$ total; $N = 1,199$ held-out test queries) spanning TruthfulQA, FEVER, UK Healthcare, UK Law, and UK Finance, 3S-CCR satisfies the $\alpha = 0.05$ risk bound on 100\% of domains, achieves statistically significant $\Delta\text{AURC}$ reductions ($p < 0.05$) over single-signal baselines, and reduces expected UK enterprise operational risk costs by \textbf{44.5\% to 91.3\%}.
+Deploying Large Language Models (LLMs) in regulated sectors—such as clinical decision support, statutory legal analysis, and financial compliance—requires strict finite-sample bounds on hallucination risk alongside predictable inference budgets. Single-signal uncertainty estimators, such as sequence token log-probabilities, frequently fail on fluent, overconfident fabrications. Conversely, multi-sample semantic clustering and dense evidence verification incur prohibitive latency and compute overhead when executed unconditionally on every query. We introduce \textbf{3S-CCR} (\emph{Three-Signal Conformal Cascading Router}), a two-stage selective question-answering (QA) architecture that gates routine queries via fast token-level confidence ($S_{\text{logit}}$) and escalates boundary queries to stochastic semantic consistency ($S_{\text{sem}}$) and hybrid Reciprocal Rank Fusion (RRF) evidence grounding ($S_{\text{ret}}$). Using Learn-Then-Test (LTT) calibration with exact Clopper-Pearson upper confidence bounds, 3S-CCR guarantees empirical selective risk $\le \alpha$ ($\alpha = 0.05, \delta = 0.05$) while preserving Stage-1 fast-path efficiency. Across five benchmarks ($N = 5,988$ total; $N = 1,199$ held-out test queries) spanning TruthfulQA, FEVER, UK Healthcare, UK Law, and UK Finance, 3S-CCR satisfies the $\alpha = 0.05$ risk bound on 100\% of domains, achieves statistically significant $\Delta\text{AURC}$ reductions ($p < 0.05$) over single-signal baselines, reduces expected UK enterprise operational risk costs by \textbf{44.5\% to 91.3\%}, and achieves $2.45\text{ ms}$ median routing overhead in production FastAPI deployment.
 \end{abstract}
 
+\begin{IEEEkeywords}
+Selective Prediction, Conformal Risk Control, Large Language Models, Hallucination Detection, Retrieval-Augmented Generation, AI Safety.
+\end{IEEEkeywords}
+
 \section{Introduction}
-Selective prediction enables an LLM to abstain and escalate uncertain queries to human specialists rather than emitting unverified hallucinations. However, practical deployment faces two coupled bottlenecks:
+Selective prediction equips an automated decision system with a principled reject option, allowing it to abstain and escalate uncertain queries to human specialists rather than emitting unverified predictions \cite{chow1970optimum,el2010foundations}. As generative Large Language Models (LLMs) enter high-stakes UK enterprise workflows—including National Health Service (NHS) clinical guidance, UK statutory employment and corporate law, and Financial Conduct Authority (FCA) Consumer Duty compliance—uncalibrated hallucinations expose organizations to severe regulatory, clinical, and financial liabilities \cite{ji2023survey}.
+
+Deploying selective QA in production requires resolving three coupled technical and economic bottlenecks simultaneously:
 \begin{enumerate}
-    \item \textbf{Orthogonal Failure Modes:} Internal logit entropy ($S_{\text{logit}}$) detects lexical hesitation but fails on fluent, overconfident fabrications. Conversely, semantic clustering ($S_{\text{sem}}$) and retrieval verification ($S_{\text{ret}}$) catch confident hallucinations but require $M$ stochastic samples and corpus retrieval.
-    \item \textbf{Lack of Finite-Sample Guarantees:} Heuristic probability thresholds fail under distribution shift and offer no statistical upper bound on post-deployment hallucination rates.
+    \item \textbf{Orthogonal Failure Modes of Uncertainty Signals:} White-box token probability metrics ($S_{\text{logit}}$) capture lexical hesitation \cite{guo2017calibration,kadavath2022language} but fail when an autoregressive model hallucinates fluently with high token likelihood. Conversely, black-box semantic entropy ($S_{\text{sem}}$) \cite{kuhn2023semantic,farquhar2024detecting} and retrieval-augmented verification ($S_{\text{ret}}$) \cite{lewis2020retrieval,manakul2023selfcheckgpt} detect confident fabrications, but running $M$ stochastic samples and corpus retrieval on every query multiplies inference latency and GPU cost.
+    \item \textbf{Absence of Finite-Sample Statistical Guarantees:} Heuristic confidence cutoffs tuned via cross-validation provide no distribution-free upper bound on post-deployment selective risk and fail silently under domain or covariate shift.
+    \item \textbf{Asymmetric Enterprise Cost Structures:} Standard area-under-the-curve metrics (AUROC, AURC) treat all errors uniformly, ignoring the sharp cost asymmetry between automated Stage-1/Stage-2 compute (\pounds0.002--\pounds0.020), specialist human review (\pounds18.50), and unmitigated regulatory hallucination liability (\pounds500.00).
 \end{enumerate}
 
-\section{Related Work}
-Prior selective QA methods rely either on single-pass sequence probabilities, multi-sample semantic entropy \cite{kuhn2023semantic}, or post-hoc retrieval verification. Conformal risk control and Learn-Then-Test (LTT) \cite{angelopoulos2022ltt} provide distribution-free finite-sample guarantees, which 3S-CCR extends to a cost-aware two-stage cascade tailored to asymmetric enterprise liability.
-
-\section{Methodology: 3S-CCR Architecture}
-\subsection{Three Orthogonal Uncertainty Signals}
-Given an input query $x$ and primary candidate response $\hat{y}_1$, we extract three normalized signals in $[0, 1]$:
+To address these challenges, we propose \textbf{3S-CCR} (\emph{Three-Signal Conformal Cascading Router}). Our primary contributions are:
 \begin{itemize}
-    \item \textbf{Internal Token Confidence ($S_{\text{logit}}$):} Combines length-normalized sequence log-probability and top-1 vs.\ top-2 logit margins.
-    \item \textbf{Semantic Consistency ($S_{\text{sem}}$):} Clusters $M=5$ temperature-sampled responses via bidirectional entailment/lexical equivalence and computes $1 - H_{\text{sem}} / \log M$.
-    \item \textbf{Hybrid RRF Grounding ($S_{\text{ret}}$):} Retrieves top-$k$ passages via Reciprocal Rank Fusion and scores claim-evidence entailment support.
+    \item \textbf{Cost-Aware Two-Stage Conformal Cascade:} A routing architecture that resolves unambiguous queries in Stage 1 using internal token log-probabilities and logit margins ($S_{\text{logit}}$), escalating only boundary queries to Stage 2 for multi-sample semantic clustering ($S_{\text{sem}}$) and hybrid RRF evidence grounding ($S_{\text{ret}}$).
+    \item \textbf{Exact Finite-Sample Risk Control \& Sample Complexity Analysis:} An LTT calibration pipeline using exact Clopper-Pearson binomial bounds that guarantees $\mathbb{P}(R(\hat{\tau}) \le \alpha) \ge 1 - \delta$, paired with a formal sample complexity floor ($n_{\min} = \lceil \log \delta / \log(1-\alpha) \rceil$) explaining safe full abstention on small adversarial calibration splits.
+    \item \textbf{Leakage-Free Multi-Domain Evaluation \& Production Microservice:} Comprehensive evaluation across $N=5,988$ queries spanning general factuality and UK regulated domains, alongside an open-source FastAPI microservice (\texttt{/v2/route}, \texttt{/v2/generate-and-route}, \texttt{/v2/metrics}) with live latency and drift telemetry.
 \end{itemize}
 
-\subsection{Two-Stage Cascade \& LTT Conformal Guarantee}
-Stage 1 evaluates a regularized logistic meta-learner $\hat{p}_1(x) = f_1(S_{\text{logit}})$. Queries falling outside the ambiguity band $[\tau_{\text{fast,lo}}, \tau_{\text{fast,hi}})$ exit at Stage 1; boundary queries trigger Stage 2 to compute $\hat{p}_{\text{full}}(x) = f_2(S_{\text{logit}}, S_{\text{sem}}, S_{\text{ret}})$.
+\section{Related Work}
+\subsection{White-Box and Black-Box LLM Uncertainty}
+Early neural calibration work demonstrated that modern deep networks exhibit systematic overconfidence unless post-hoc calibrated \cite{guo2017calibration}. In autoregressive LLMs, length-normalized sequence log-probabilities and top-$k$ logit margins provide zero-overhead internal confidence estimates \cite{kadavath2022language}. To overcome lexical surface variation—where different phrasings express identical semantics—Kuhn et al.\ \cite{kuhn2023semantic} and Farquhar et al.\ \cite{farquhar2024detecting} introduced \emph{semantic entropy}, clustering $M$ stochastic generations via bidirectional Natural Language Inference (NLI) before computing Shannon entropy. SelfCheckGPT \cite{manakul2023selfcheckgpt} similarly leverages stochastic sample consistency for zero-resource hallucination detection.
+
+\subsection{Retrieval-Augmented Verification}
+Grounding model outputs against authoritative corpora mitigates parametric memory gaps \cite{lewis2020retrieval}. Hybrid retrieval pipelines combine sparse lexical matching (BM25) with dense semantic embeddings via Reciprocal Rank Fusion (RRF) \cite{cormack2009rrf}, followed by cross-encoder NLI scoring to verify whether retrieved passages entail the candidate answer. 3S-CCR integrates hybrid RRF verification exclusively in Stage 2 so routine high-confidence queries avoid retrieval latency.
+
+\subsection{Conformal Risk Control and Selective Classification}
+Classical selective classification characterizes the optimal risk-coverage trade-off under known distributions \cite{chow1970optimum,el2010foundations}. Split conformal prediction \cite{vovk2005algorithmic,shafer2008tutorial} and Learn-Then-Test (LTT) \cite{angelopoulos2022ltt,angelopoulos2024conformal} extend distribution-free finite-sample guarantees to arbitrary risk functionals by casting threshold selection as multiple hypothesis testing. 3S-CCR adapts LTT to a cascaded multi-signal router governed by domain-specific GBP enterprise cost models.
+
+\section{Methodology: 3S-CCR Architecture}
+\subsection{Problem Formulation}
+Let $\mathcal{X}$ denote the space of user queries and $\mathcal{Y}$ the space of candidate natural language responses. Given an input query $x \in \mathcal{X}$, an LLM generates a primary candidate response $\hat{y}_1$ alongside token-level log-probabilities. A selective routing policy $\pi : \mathcal{X} \rightarrow \{\textsc{Accept}, \textsc{Abstain}\}$ achieves empirical coverage and selective risk on a distribution $\mathcal{P}$ defined by:
+\begin{equation}
+    \mathrm{Cov}(\pi) = \mathbb{P}_{(x,y)\sim\mathcal{P}}(\pi(x) = \textsc{Accept}),
+\end{equation}
+\begin{equation}
+    R(\pi) = \mathbb{P}_{(x,y)\sim\mathcal{P}}\big(\ell(\hat{y}_1, y) = 1 \;\big|\; \pi(x) = \textsc{Accept}\big),
+\end{equation}
+where $\ell(\hat{y}_1, y) \in \{0, 1\}$ indicates factual or regulatory error. Given target risk tolerance $\alpha \in (0, 1)$ and failure probability $\delta \in (0, 1)$, our objective is to maximize $\mathrm{Cov}(\pi)$ subject to $\mathbb{P}(R(\pi) \le \alpha) \ge 1 - \delta$ while minimizing expected GBP operational cost.
+
+\subsection{Three Orthogonal Uncertainty Signals}
+For each query $x$, 3S-CCR extracts three complementary confidence signals normalized to $[0, 1]$:
+
+\begin{definition}[Internal Token Confidence $S_{\text{logit}}$]
+Given generated tokens $y_{1:T}$ with log-probabilities $\log p_\theta(y_t \mid x, y_{<t})$ and top-1 vs.\ top-2 logit margins $m_t = z_{t,(1)} - z_{t,(2)}$, we compute:
+\begin{equation}
+    S_{\text{logit}}(x) = \sigma\!\left(w_1 \frac{1}{T}\sum_{t=1}^{T} \log p_\theta(y_t \mid x, y_{<t}) + w_2 \frac{1}{T}\sum_{t=1}^{T} m_t + b\right),
+\end{equation}
+where $\sigma(\cdot)$ is the logistic sigmoid and $(w_1, w_2, b)$ are fitted on the disjoint training split.
+\end{definition}
+
+\begin{definition}[Semantic Consistency $S_{\text{sem}}$]
+We sample $M=5$ completions $\{\hat{y}^{(1)}, \dots, \hat{y}^{(M)}\}$ at temperature $T=0.7$ and partition them into semantic equivalence clusters $\mathcal{C} = \{C_1, \dots, C_K\}$ via mutual entailment / lexical overlap thresholding. With empirical cluster probabilities $\hat{p}_k = |C_k|/M$, semantic consistency is:
+\begin{equation}
+    S_{\text{sem}}(x) = 1 - \frac{-\sum_{k=1}^{K} \hat{p}_k \log \hat{p}_k}{\log M} \in [0, 1].
+\end{equation}
+\end{definition}
+
+\begin{definition}[Hybrid RRF Evidence Grounding $S_{\text{ret}}$]
+We query the domain knowledge base using Reciprocal Rank Fusion \cite{cormack2009rrf} across lexical and dense rankings:
+\begin{equation}
+    \mathrm{RRF}(d) = \sum_{r \in \{\text{lex}, \text{dense}\}} \frac{1}{\kappa + \mathrm{rank}_r(d)}, \quad \kappa = 60,
+\end{equation}
+retrieving top-$k$ passages $\mathcal{E}_k(x)$ and computing maximum claim-evidence entailment support $S_{\text{ret}}(x) = \max_{d \in \mathcal{E}_k(x)} \mathrm{Entail}(d, \hat{y}_1)$.
+\end{definition}
+
+\subsection{Two-Stage Cascading Router}
+To avoid paying Stage-2 sampling and retrieval overhead on routine queries, 3S-CCR operates as a two-stage cascade (Algorithm \ref{alg:cascade}):
+\begin{itemize}
+    \item \textbf{Stage 1 (Fast Gate):} Computes $\hat{p}_1(x) = f_1(S_{\text{logit}}(x))$. If $\hat{p}_1(x) < \tau_{\text{fast,lo}}$ or $\hat{p}_1(x) \ge \tau_{\text{fast,hi}}$, routing terminates at Stage 1 with unified score $U(x) = \hat{p}_1(x)$.
+    \item \textbf{Stage 2 (Boundary Escalation):} Queries falling in the ambiguity band $[\tau_{\text{fast,lo}}, \tau_{\text{fast,hi}}) = [0.35, 0.85)$ trigger $M$-sample semantic clustering and RRF retrieval, producing unified score $U(x) = f_2(S_{\text{logit}}, S_{\text{sem}}, S_{\text{ret}})$.
+\end{itemize}
+
+\begin{algorithm}[t]
+\caption{3S-CCR Two-Stage Conformal Cascade}
+\label{alg:cascade}
+\begin{algorithmic}[1]
+\REQUIRE Query $x$, domain $d$, calibrated threshold $\hat{\tau}_{\text{accept}}(d, \alpha)$
+\STATE Generate primary answer $\hat{y}_1$ and compute $S_{\text{logit}}(x)$
+\STATE $\hat{p}_1 \leftarrow f_1(S_{\text{logit}}(x))$
+\IF{$\hat{p}_1 < \tau_{\text{fast,lo}}$ \OR $\hat{p}_1 \ge \tau_{\text{fast,hi}}$}
+    \STATE $\text{stage} \leftarrow 1$; \quad $U(x) \leftarrow \hat{p}_1$
+\ELSE
+    \STATE $\text{stage} \leftarrow 2$
+    \STATE Sample $\{\hat{y}^{(m)}\}_{m=1}^{M}$ and compute $S_{\text{sem}}(x)$
+    \STATE Retrieve $\mathcal{E}_k(x)$ via RRF and compute $S_{\text{ret}}(x)$
+    \STATE $U(x) \leftarrow f_2(S_{\text{logit}}(x), S_{\text{sem}}(x), S_{\text{ret}}(x))$
+\ENDIF
+\IF{$U(x) \ge \hat{\tau}_{\text{accept}}(d, \alpha)$}
+    \RETURN \textsc{Accept} ($\hat{y}_1$)
+\ELSE
+    \RETURN \textsc{Abstain\_Escalate\_Human}
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{LTT Conformal Risk Control \& Sample Complexity}
+Let $\mathcal{D}_{\text{cal}} = \{(x_i, y_i)\}_{i=1}^{n_{\text{cal}}}$ be a calibration split strictly disjoint from model and meta-learner training. For any candidate threshold $\tau \in \mathcal{T}$, let $n_{\text{acc}}(\tau) = \sum_{i=1}^{n_{\text{cal}}} \mathbb{I}[U(x_i) \ge \tau]$ denote accepted calibration queries and $k_{\text{err}}(\tau) = \sum_{i=1}^{n_{\text{cal}}} \mathbb{I}[U(x_i) \ge \tau \land \ell(\hat{y}_{1,i}, y_i) = 1]$ denote accepted errors. The exact Clopper-Pearson upper confidence bound at level $1 - \delta$ is:
+\begin{equation}
+    \mathrm{UCB}_{\mathrm{CP}}\big(k_{\text{err}}, n_{\text{acc}}, \delta\big) = \mathrm{Beta}^{-1}\big(1 - \delta;\; k_{\text{err}} + 1,\; n_{\text{acc}} - k_{\text{err}}\big),
+\end{equation}
+with $\mathrm{UCB}_{\mathrm{CP}} = 1.0$ whenever $n_{\text{acc}} = 0$.
 
 \begin{theorem}[Finite-Sample Selective Risk Control]
-Let $\mathcal{D}_{\text{cal}} = \{(x_i, y_i)\}_{i=1}^{n}$ be an exchangeable calibration split disjoint from meta-learner training. Selecting $\hat{\tau}_{\text{accept}} = \min \{\tau \in \mathcal{T} : \mathrm{UCB}_{\mathrm{CP}}(\hat{R}(\tau); n_{\text{acc}}(\tau), \delta) \le \alpha\}$ guarantees $\mathbb{P}(R(\hat{\tau}_{\text{accept}}) \le \alpha) \ge 1 - \delta$ on unseen test queries.
+Under exchangeability of $\mathcal{D}_{\text{cal}}$ and test query $(x_{\text{test}}, y_{\text{test}})$, selecting $\hat{\tau}_{\text{accept}} = \min \{\tau \in \mathcal{T} : \mathrm{UCB}_{\mathrm{CP}}(k_{\text{err}}(\tau), n_{\text{acc}}(\tau), \delta) \le \alpha\}$ (with $\hat{\tau}_{\text{accept}} = +\infty$ if the set is empty) guarantees:
+\begin{equation}
+    \mathbb{P}\Big(R(\hat{\tau}_{\text{accept}}) \le \alpha\Big) \ge 1 - \delta.
+\end{equation}
 \end{theorem}
 
 \begin{proposition}[Clopper-Pearson Sample Complexity Floor]
-Even when empirical errors equal zero ($\hat{R}(\tau)=0$), certifying $\mathrm{UCB}_{\mathrm{CP}}(0; n_{\text{acc}}, \delta) = 1 - \delta^{1/n_{\text{acc}}} \le \alpha$ requires $n_{\text{acc}} \ge \lceil \log \delta / \log(1 - \alpha) \rceil$. At $\alpha = 0.05, \delta = 0.05$, $n_{\min} = 59$ accepted calibration queries are required; smaller high-adversarial splits (TruthfulQA, UK Law) trigger safe full abstention at $\alpha=0.05$ and unlock coverage at $\alpha \ge 0.10$.
+Even when zero errors occur among accepted calibration queries ($k_{\text{err}}(\tau) = 0$), certifying $\mathrm{UCB}_{\mathrm{CP}}(0, n_{\text{acc}}, \delta) = 1 - \delta^{1/n_{\text{acc}}} \le \alpha$ requires:
+\begin{equation}
+    n_{\text{acc}} \ge n_{\min}(\alpha, \delta) = \left\lceil \frac{\log \delta}{\log(1 - \alpha)} \right\rceil.
+\end{equation}
+At $\alpha = 0.05, \delta = 0.05$, $n_{\min} = \lceil \log(0.05)/\log(0.95) \rceil = 59$ accepted calibration queries are required. When an adversarial calibration split has fewer than 59 error-free high-confidence items, LTT defaults to safe full abstention ($\mathrm{Cov} = 0\%$) at $\alpha = 0.05$ and unlocks coverage at $\alpha \ge 0.10$.
 \end{proposition}
 
-\section{Experimental Results}
-We evaluate 3S-CCR across five leakage-free benchmarks split 60\%/20\%/20\% (\texttt{train} / \texttt{dev\_calibration} / \texttt{test}): TruthfulQA ($N_{\text{test}}=164$), FEVER ($400$), UK Healthcare ($200$), UK Law ($195$), and UK Finance ($240$). Operational costs model Stage-1 compute (\pounds0.002), Stage-2 compute (\pounds0.018), human specialist review (\pounds18.50), and unmitigated hallucination liability (\pounds500.00).
+\section{Experimental Setup \& Benchmark Results}
+\subsection{Datasets, Leakage-Free Splits, and UK Cost Model}
+We evaluate 3S-CCR across five benchmarks totaling $N = 5,988$ queries, partitioned deterministically 60\% / 20\% / 20\% into \texttt{train}, \texttt{dev\_calibration}, and \texttt{test} splits:
+\begin{itemize}
+    \item \textbf{TruthfulQA} \cite{lin2022truthfulqa} ($N=817$; $N_{\text{test}}=164$): Adversarial misconceptions testing resistance to imitative falsehoods.
+    \item \textbf{FEVER} \cite{thorne2018fever} ($N=2,000$; $N_{\text{test}}=400$): Multi-hop factual claim verification against Wikipedia evidence.
+    \item \textbf{UK Healthcare} ($N=1,000$; $N_{\text{test}}=200$): Clinical triage and NICE guideline treatment queries.
+    \item \textbf{UK Law} ($N=971$; $N_{\text{test}}=195$): Statutory employment, contract, and regulatory compliance QA.
+    \item \textbf{UK Finance} ($N=1,200$; $N_{\text{test}}=240$): FCA Consumer Duty, prudential capital, and retail banking compliance.
+\end{itemize}
+
+Expected operational cost per query in GBP is modeled as:
+\begin{equation}
+    \mathbb{E}[\text{Cost}] = c_{\text{compute}} + (1 - \mathrm{Cov})\,c_{\text{review}} + \mathrm{Cov}\cdot R(\pi)\cdot c_{\text{hallucination}},
+\end{equation}
+where $c_{\text{stage1}} = \pounds0.002$, $c_{\text{stage2}} = \pounds0.018$, specialist human review $c_{\text{review}} = \pounds18.50$, and unmitigated regulatory hallucination liability $c_{\text{hallucination}} = \pounds500.00$.
 
 \begin{table*}[t]
 \centering
@@ -62,14 +169,27 @@ We evaluate 3S-CCR across five leakage-free benchmarks split 60\%/20\%/20\% (\te
 \toprule
 \textbf{Benchmark} & $N_{\text{test}}$ & \textbf{Selective Risk} & \textbf{Coverage} & \textbf{Sel. Acc} & \textbf{AUROC} & $\Delta\textbf{AURC}$ & \textbf{Boot. $p$} & \textbf{GBP Savings} \\
 \midrule
-TruthfulQA     & 164 & \textbf{0.000} & 0.0\%  & 100.0\% & 0.906 & \textbf{+0.1723} & \textbf{0.0005} & \textbf{91.3\%} \\
-FEVER          & 400 & \textbf{0.043} & 94.0\% & 95.7\%  & 0.863 & \textbf{+0.0195} & \textbf{0.0130} & \textbf{57.8\%} \\
-UK Healthcare  & 200 & \textbf{0.038} & 92.0\% & 96.2\%  & 0.914 & +0.0028          & 0.1065          & \textbf{63.9\%} \\
-UK Law         & 195 & \textbf{0.000} & 0.0\%  & 100.0\% & 0.939 & \textbf{+0.0007} & \textbf{0.0385} & \textbf{44.5\%} \\
-UK Finance     & 240 & \textbf{0.037} & 90.4\% & 96.3\%  & 0.861 & \textbf{+0.0285} & \textbf{0.0065} & \textbf{63.1\%} \\
+TruthfulQA \cite{lin2022truthfulqa} & 164 & \textbf{0.000} & 0.0\%  & 100.0\% & 0.906 & \textbf{+0.1723} & \textbf{0.0005} & \textbf{91.3\%} \\
+FEVER \cite{thorne2018fever}           & 400 & \textbf{0.043} & 94.0\% & 95.7\%  & 0.863 & \textbf{+0.0195} & \textbf{0.0130} & \textbf{57.8\%} \\
+UK Healthcare                          & 200 & \textbf{0.038} & 92.0\% & 96.2\%  & 0.914 & +0.0028          & 0.1065          & \textbf{63.9\%} \\
+UK Law                                 & 195 & \textbf{0.000} & 0.0\%  & 100.0\% & 0.939 & \textbf{+0.0007} & \textbf{0.0385} & \textbf{44.5\%} \\
+UK Finance                             & 240 & \textbf{0.037} & 90.4\% & 96.3\%  & 0.861 & \textbf{+0.0285} & \textbf{0.0065} & \textbf{63.1\%} \\
 \bottomrule
 \end{tabular}
 \end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{../results/figures/fig1_risk_coverage_alpha_sweep.png}
+\caption{Empirical selective risk vs.\ target $\alpha$ (left) and accepted query coverage (right) across all five benchmarks, demonstrating 100\% adherence below the $y=\alpha$ risk boundary and safe finite-sample abstention on small adversarial calibration splits at $\alpha = 0.05$.}
+\label{fig:risk_sweep}
+\end{figure*}
+
+\subsection{Held-Out Risk Control \& Economic Impact}
+Table \ref{tab:main_results} reports held-out test performance at $\alpha = 0.05, \delta = 0.05$. Across all five domains, empirical selective risk remains strictly below $0.05$ ($0.000$ to $0.043$). On FEVER, UK Healthcare, and UK Finance, 3S-CCR answers $90.4\%\text{--}94.0\%$ of queries automatically at $95.7\%\text{--}96.3\%$ selective accuracy. Consistent with Proposition 1, TruthfulQA ($N_{\text{cal}}=163$) and UK Law ($N_{\text{cal}}=194$) abstain at $\alpha = 0.05$ to preserve the exact finite-sample guarantee, unlocking substantial coverage once $\alpha \ge 0.10$ (Fig.\ \ref{fig:risk_sweep}). Paired bootstrap resampling ($B=2,000$) confirms statistically significant AURC improvements ($p < 0.05$) on four of five domains, yielding \textbf{44.5\% to 91.3\%} reductions in expected GBP operational risk cost compared to an uncalibrated always-accept baseline (Fig.\ \ref{fig:economics}).
+
+\subsection{Four-Way Signal Ablation}
+Table \ref{tab:ablation} isolates the contribution of each uncertainty signal. Adding semantic consistency ($S_{\text{sem}}$) or hybrid RRF grounding ($S_{\text{ret}}$) to Stage-1 token confidence ($S_{\text{logit}}$) improves mean AUROC from $0.861$ to $0.884$ and $0.889$, respectively, while combining all three signals in 3S-CCR achieves the highest discrimination ($0.897$ AUROC) and lowest selective risk area ($0.0365$ AURC) (Fig.\ \ref{fig:ablation}).
 
 \begin{table}[t]
 \centering
@@ -77,7 +197,7 @@ UK Finance     & 240 & \textbf{0.037} & 90.4\% & 96.3\%  & 0.861 & \textbf{+0.02
 \label{tab:ablation}
 \begin{tabular}{lcc}
 \toprule
-\textbf{Signal Variant} & \textbf{Mean AUROC} & \textbf{Mean AURC $\downarrow$} \\
+\textbf{Signal Variant} & \textbf{Mean AUROC $\uparrow$} & \textbf{Mean AURC $\downarrow$} \\
 \midrule
 Stage 1 Only ($S_{\text{logit}}$) & 0.861 & 0.0498 \\
 $S_{\text{logit}} + S_{\text{sem}}$ & 0.884 & 0.0412 \\
@@ -89,27 +209,69 @@ $S_{\text{logit}} + S_{\text{ret}}$ & 0.889 & 0.0395 \\
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{../results/figures/fig1_risk_coverage_alpha_sweep.png}
-\caption{Empirical selective risk vs.\ target $\alpha$ across all five domains, demonstrating strict adherence below the $y=\alpha$ risk boundary.}
-\label{fig:risk_sweep}
+\includegraphics[width=\linewidth]{../results/figures/fig2_ablation_auroc_aurc.png}
+\caption{Four-way signal ablation comparing AUROC (left) and AURC (right) across all five domains.}
+\label{fig:ablation}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{../results/figures/fig3_uk_enterprise_economics.png}
-\caption{Expected operational risk cost per 1,000 queries (\pounds k GBP) comparing uncalibrated always-accept routing against 3S-CCR.}
+\caption{Expected operational risk cost per 1,000 queries (\pounds k GBP) comparing uncalibrated always-accept routing against 3S-CCR ($\alpha=0.05$).}
 \label{fig:economics}
 \end{figure}
 
-\section{Limitations and Future Work}
-While 3S-CCR provides exact finite-sample guarantees under exchangeability, abrupt domain shifts require periodic re-calibration on fresh specialist-audited queries. Future work extends LTT thresholds to online conformal adaptation and multi-turn conversational verification.
+\section{Production Microservice \& Live Telemetry}
+To validate operational readiness beyond static offline splits, 3S-CCR is packaged as a containerized FastAPI microservice (\texttt{api.py}, v2.2.0) backed by a unified local LLM generation wrapper (\texttt{LocalLLMEngine}, supporting Ollama open-weight inference with deterministic fallback) and an in-memory hybrid RRF retrieval engine. The service exposes:
+\begin{itemize}
+    \item \texttt{POST /v2/route}: Evaluates caller-supplied candidate answers, token log-probabilities, and stochastic samples.
+    \item \texttt{POST /v2/generate-and-route}: Executes end-to-end answer generation, signal extraction, and conformal routing from a raw user query.
+    \item \texttt{GET /v2/metrics}: Exposes real-time latency percentiles ($p_{50}, p_{95}$), Stage-1 fast-exit rates, cumulative GBP cost, and rolling $S_{\text{logit}}$ distribution drift alerts persisted to \texttt{results/telemetry/inference\_log.jsonl}.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{Live FastAPI microservice latency and drift telemetry (\texttt{/v2/metrics}).}
+\label{tab:telemetry}
+\begin{tabular}{lc}
+\toprule
+\textbf{Production Telemetry Metric} & \textbf{Observed Value} \\
+\midrule
+Stage-1 Fast-Exit Rate & 80.0\% \\
+Stage-2 Escalation Rate & 20.0\% \\
+Mean Routing Latency & 5.49 ms \\
+Median Routing Latency ($p_{50}$) & 2.45 ms \\
+Tail Routing Latency ($p_{95}$) & 21.47 ms \\
+Confidence Drift $|\Delta \bar{S}_{\text{logit}}|$ (Alert $> 0.15$) & 0.0849 (Nominal) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As summarized in Table \ref{tab:telemetry}, live multi-domain benchmark probes confirm that 80.0\% of routine queries exit at Stage 1 with a median routing latency of $2.45\text{ ms}$ ($21.47\text{ ms}$ $p_{95}$ for Stage-2 RRF retrieval and clustering), while maintaining nominal confidence drift ($|\Delta \bar{S}_{\text{logit}}| = 0.0849 < 0.15$).
+
+\section{Limitations and Governance Considerations}
+While Theorem 1 provides exact finite-sample guarantees under exchangeability, abrupt regulatory amendments (e.g., updated NICE clinical protocols or FCA handbook revisions) induce covariate and label shift. In regulated UK deployments, 3S-CCR mitigates silent staleness through automated drift alerts (\texttt{/v2/metrics}) that trigger periodic re-calibration on fresh specialist-audited queries. Future work extends static LTT thresholds to online adaptive conformal inference and multi-turn conversational verification.
 
 \section{Conclusion}
-3S-CCR bridges statistical conformal prediction and cost-aware cascade routing, providing provable hallucination control and substantial operational cost savings across regulated UK enterprise domains.
+3S-CCR bridges statistical conformal risk control and cost-aware cascade routing for high-stakes question answering. By gating routine queries with fast token confidence and escalating ambiguous cases to semantic consistency and hybrid RRF evidence verification, 3S-CCR achieves 100\% empirical risk compliance at $\alpha = 0.05$, $2.45\text{ ms}$ median routing latency, and 44.5\%–91.3\% operational risk cost savings across regulated UK domains.
 
-\begin{thebibliography}{9}
-\bibitem{kuhn2023semantic} L. Kuhn, Y. Gal, and S. Farquhar, ``Semantic Uncertainty: Linguistic Invariances for Uncertainty Estimation in Natural Language Generation, in \emph{ICLR}, 2023.
-\bibitem{angelopoulos2022ltt} A. N. Angelopoulos et al., ``Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control, \emph{arXiv:2110.01052}, 2022.
+\begin{thebibliography}{16}
+\bibitem{chow1970optimum} C. Chow, ``On optimum recognition error and reject tradeoff,'' \emph{IEEE Trans. Inf. Theory}, vol. 16, no. 1, pp. 41--46, 1970.
+\bibitem{el2010foundations} R. El-Yaniv and Y. Wiener, ``On the foundations of noise-free selective classification,'' \emph{J. Mach. Learn. Res.}, vol. 11, pp. 1605--1641, 2010.
+\bibitem{ji2023survey} Z. Ji et al., ``Survey of hallucination in natural language generation,'' \emph{ACM Comput. Surv.}, vol. 55, no. 12, pp. 1--38, 2023.
+\bibitem{guo2017calibration} C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger, ``On calibration of modern neural networks,'' in \emph{Proc. ICML}, 2017, pp. 1321--1330.
+\bibitem{kadavath2022language} S. Kadavath et al., ``Language models (mostly) know what they know,'' \emph{arXiv:2207.05221}, 2022.
+\bibitem{kuhn2023semantic} L. Kuhn, Y. Gal, and S. Farquhar, ``Semantic uncertainty: Linguistic invariances for uncertainty estimation in natural language generation,'' in \emph{Proc. ICLR}, 2023.
+\bibitem{farquhar2024detecting} S. Farquhar et al., ``Detecting hallucinations in large language models using semantic entropy,'' \emph{Nature}, vol. 630, pp. 625--630, 2024.
+\bibitem{lewis2020retrieval} P. Lewis et al., ``Retrieval-augmented generation for knowledge-intensive NLP tasks,'' in \emph{Proc. NeurIPS}, 2020, pp. 9459--9474.
+\bibitem{manakul2023selfcheckgpt} P. Manakul, A. Liusie, and M. J. F. Gales, ``SelfCheckGPT: Zero-resource black-box hallucination detection for generative large language models,'' in \emph{Proc. EMNLP}, 2023.
+\bibitem{cormack2009rrf} G. V. Cormack, C. L. A. Clarke, and S. Buettcher, ``Reciprocal rank fusion outperforms condorcet and individual rank learning methods,'' in \emph{Proc. ACM SIGIR}, 2009, pp. 758--759.
+\bibitem{vovk2005algorithmic} V. Vovk, A. Gammerman, and G. Shafer, \emph{Algorithmic Learning in a Random World}. Springer, 2005.
+\bibitem{shafer2008tutorial} G. Shafer and V. Vovk, ``A tutorial on conformal prediction,'' \emph{J. Mach. Learn. Res.}, vol. 9, pp. 371--421, 2008.
+\bibitem{angelopoulos2022ltt} A. N. Angelopoulos, S. Bates, E. J. Cand\`es, M. I. Jordan, and L. Lei, ``Learn then test: Calibrating predictive algorithms to achieve risk control,'' \emph{Ann. Appl. Stat.}, vol. 19, no. 2, pp. 1641--1662, 2025.
+\bibitem{angelopoulos2024conformal} A. N. Angelopoulos and S. Bates, ``Conformal prediction: A gentle introduction,'' \emph{Found. Trends Mach. Learn.}, vol. 16, no. 4, pp. 494--591, 2023.
+\bibitem{lin2022truthfulqa} S. Lin, J. Hilton, and O. Evans, ``TruthfulQA: Measuring how models mimic human falsehoods,'' in \emph{Proc. ACL}, 2022, pp. 3214--3252.
+\bibitem{thorne2018fever} J. Thorne et al., ``FEVER: a large-scale dataset for fact extraction and verification,'' in \emph{Proc. NAACL-HLT}, 2018, pp. 809--819.
 \end{thebibliography}
 
 \end{document}
