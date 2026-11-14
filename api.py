@@ -1,8 +1,9 @@
-"""FastAPI production service for the 3S-CCR Conformal Cascading Router (v2.1)."""
+"""FastAPI production service for the 3S-CCR Conformal Cascading Router (v2.2)."""
 
 from __future__ import annotations
 
 import json
+import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
@@ -17,6 +18,7 @@ from ccr_router.retrieval.hybrid_retriever import HybridRRFRetriever
 from ccr_router.signals.internal_entropy import compute_s_logit
 from ccr_router.signals.nli_grounding import NLIGroundingScorer
 from ccr_router.signals.semantic_entropy import SemanticEntropyEstimator
+from ccr_router.telemetry import TelemetryTracker
 
 DOMAINS = ("truthful_qa", "fever", "uk_healthcare", "uk_law", "uk_finance")
 
@@ -68,6 +70,7 @@ class RouteResponse(BaseModel):
     tau_accept: float
     target_alpha: float
     estimated_query_cost_gbp: float
+    latency_ms: float
     retrieved_evidence_top1: str | None
 
 
@@ -106,14 +109,15 @@ async def lifespan(app: FastAPI):
     STATE["retrievers"] = retrievers
     STATE["sem_estimator"] = SemanticEntropyEstimator(entailment_fn=None, jaccard_threshold=0.65)
     STATE["nli_scorer"] = NLIGroundingScorer(use_cross_encoder=False)
+    STATE["telemetry"] = TelemetryTracker()
     yield
     STATE.clear()
 
 
 app = FastAPI(
     title="3S-CCR Conformal Cascading Router API",
-    version="2.1.0",
-    description="Finite-sample calibrated selective QA router for UK regulated domains.",
+    version="2.2.0",
+    description="Finite-sample calibrated selective QA router with live telemetry & drift alerts.",
     lifespan=lifespan,
 )
 
@@ -121,7 +125,9 @@ app = FastAPI(
 def _evaluate_cascade(
     req: RouteRequest,
     backend_used: str = "external_caller_signals",
+    started_at: float | None = None,
 ) -> RouteResponse:
+    t0 = started_at if started_at is not None else time.perf_counter()
     cfg = STATE["cfg"]
     econ = cfg["uk_enterprise_economics"]
     tau_lo = float(cfg["cascade"]["tau_fast_lo"])
@@ -156,6 +162,21 @@ def _evaluate_cascade(
         "ACCEPT" if accepted else "ABSTAIN_ESCALATE_HUMAN"
     )
     total_cost = compute_cost + (0.0 if accepted else float(econ["human_review_cost_gbp"]))
+    latency_ms = (time.perf_counter() - t0) * 1000.0
+
+    tracker: TelemetryTracker | None = STATE.get("telemetry")
+    if tracker is not None:
+        tracker.record(
+            domain=req.domain,
+            decision=decision,
+            stage_executed=stage_executed,
+            backend_used=backend_used,
+            s_logit=s_logit,
+            unified_score=unified_score,
+            tau_accept=tau_accept,
+            cost_gbp=total_cost,
+            latency_ms=latency_ms,
+        )
 
     return RouteResponse(
         domain=req.domain,
@@ -170,6 +191,7 @@ def _evaluate_cascade(
         tau_accept=round(tau_accept, 4),
         target_alpha=req.target_alpha,
         estimated_query_cost_gbp=round(total_cost, 4),
+        latency_ms=round(latency_ms, 3),
         retrieved_evidence_top1=top_ev,
     )
 
@@ -183,9 +205,15 @@ def root() -> RedirectResponse:
 def health() -> dict:
     return {
         "status": "ok",
-        "version": "2.1.0",
+        "version": "2.2.0",
         "domains_indexed": list(STATE.get("retrievers", {}).keys()),
     }
+
+
+@app.get("/v2/metrics")
+def metrics() -> dict:
+    tracker: TelemetryTracker = STATE["telemetry"]
+    return tracker.summary()
 
 
 @app.post("/v2/route", response_model=RouteResponse)
@@ -195,6 +223,7 @@ def route_query(req: RouteRequest) -> RouteResponse:
 
 @app.post("/v2/generate-and-route", response_model=RouteResponse)
 def generate_and_route(req: GenerateAndRouteRequest) -> RouteResponse:
+    t0 = time.perf_counter()
     engine = LocalLLMEngine(model_name=req.model_name)
     bundle = engine.generate_bundle(
         question=req.question,
@@ -211,4 +240,4 @@ def generate_and_route(req: GenerateAndRouteRequest) -> RouteResponse:
         sampled_answers=bundle.sampled_answers,
         target_alpha=req.target_alpha,
     )
-    return _evaluate_cascade(route_req, backend_used=bundle.backend_used)
+    return _evaluate_cascade(route_req, backend_used=bundle.backend_used, started_at=t0)

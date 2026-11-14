@@ -1,4 +1,4 @@
-"""Integration tests for the 3S-CCR FastAPI routing and generation service."""
+"""Integration tests for the 3S-CCR FastAPI routing, generation, and telemetry service."""
 
 from fastapi.testclient import TestClient
 
@@ -30,6 +30,7 @@ def test_health_and_routing_cascade() -> None:
         assert fast_data["stage_executed"] == 1
         assert fast_data["decision"] == "ACCEPT"
         assert fast_data["s_sem"] is None
+        assert fast_data["latency_ms"] >= 0.0
 
         # 2. Boundary query escalated to Stage-2 semantic + RRF verification
         esc_res = client.post(
@@ -54,6 +55,15 @@ def test_health_and_routing_cascade() -> None:
         assert esc_data["s_sem"] is not None
         assert esc_data["s_ret"] is not None
         assert esc_data["decision"] == "ABSTAIN_ESCALATE_HUMAN"
+
+        # 3. Verify production telemetry & drift endpoint
+        metrics_res = client.get("/v2/metrics")
+        assert metrics_res.status_code == 200
+        m = metrics_res.json()
+        assert m["total_requests"] == 2
+        assert m["stage1_fast_exit_rate"] == 0.5
+        assert m["stage2_escalation_rate"] == 0.5
+        assert "drift_monitor" in m
 
 
 def test_end_to_end_generate_and_route() -> None:
