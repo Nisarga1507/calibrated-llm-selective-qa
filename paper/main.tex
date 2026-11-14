@@ -12,7 +12,7 @@
 \newtheorem{proposition}{Proposition}
 \newtheorem{definition}{Definition}
 
-\title{3S-CCR: Three-Signal Conformal Cascading Router for Cost-Optimal Selective Question Answering in Regulated UK Domains}
+\title{Tri-Signal Conformal Cascades: Finite-Sample Risk Control and Cost-Optimal Selective Routing for Regulated Question Answering}
 
 \author{\IEEEauthorblockN{Nisarga}}
 
@@ -151,9 +151,9 @@ We evaluate 3S-CCR across five benchmarks totaling $N = 5,988$ queries, partitio
 \begin{itemize}
     \item \textbf{TruthfulQA} \cite{lin2022truthfulqa} ($N=817$; $N_{\text{test}}=164$): Adversarial misconceptions testing resistance to imitative falsehoods.
     \item \textbf{FEVER} \cite{thorne2018fever} ($N=2,000$; $N_{\text{test}}=400$): Multi-hop factual claim verification against Wikipedia evidence.
-    \item \textbf{UK Healthcare} ($N=1,000$; $N_{\text{test}}=200$): Clinical triage and NICE guideline treatment queries \cite{jin2019pubmedqa,pal2022medmcqa}.
-    \item \textbf{UK Law} ($N=971$; $N_{\text{test}}=195$): Statutory employment, contract, and regulatory compliance QA \cite{chalkidis2022lexglue}.
-    \item \textbf{UK Finance} ($N=1,200$; $N_{\text{test}}=240$): FCA Consumer Duty, prudential capital, and retail banking compliance \cite{chen2021finqa}.
+    \item \textbf{UK Healthcare} ($N=1,000$; $N_{\text{test}}=200$): Clinical triage and NICE guideline treatment queries.
+    \item \textbf{UK Law} ($N=971$; $N_{\text{test}}=195$): Statutory employment, contract, and regulatory compliance QA.
+    \item \textbf{UK Finance} ($N=1,200$; $N_{\text{test}}=240$): FCA Consumer Duty, prudential capital, and retail banking compliance.
 \end{itemize}
 
 Expected operational cost per query in GBP is modeled as:
@@ -187,7 +187,7 @@ UK Finance                             & 240 & \textbf{0.037} & 90.4\% & 96.3\% 
 \end{figure*}
 
 \subsection{Held-Out Risk Control & Economic Impact}
-Table \ref{tab:main_results} reports held-out test performance at $\alpha = 0.05, \delta = 0.05$. Across all five domains, empirical selective risk remains strictly below $0.05$ ($0.000$ to $0.043$). On FEVER, UK Healthcare, and UK Finance, 3S-CCR answers $90.4\%\text{--}94.0\%$ of queries automatically at $95.7\%\text{--}96.3\%$ selective accuracy. Consistent with Proposition 1, TruthfulQA ($N_{\text{cal}}=163$) and UK Law ($N_{\text{cal}}=194$) abstain at $\alpha = 0.05$ to preserve the exact finite-sample guarantee, unlocking substantial coverage once $\alpha \ge 0.10$ (Fig.\ \ref{fig:risk_sweep}). Paired bootstrap resampling ($B=2,000$) \cite{efron1994introduction} and McNemar's test \cite{mcnemar1947note,dietterich1998approximate} confirm statistically significant AURC improvements ($p < 0.05$) on four of five domains, yielding \textbf{44.5\% to 91.3\%} reductions in expected GBP operational risk cost compared to an uncalibrated always-accept baseline (Fig.\ \ref{fig:economics}).
+Table \ref{tab:main_results} reports held-out test performance at $\alpha = 0.05, \delta = 0.05$. Across all five domains, empirical selective risk remains strictly below $0.05$ ($0.000$ to $0.043$). On FEVER, UK Healthcare, and UK Finance, 3S-CCR answers $90.4\%\text{--}94.0\%$ of queries automatically at $95.7\%\text{--}96.3\%$ selective accuracy. Consistent with Proposition 1, TruthfulQA ($N_{\text{cal}}=163$) and UK Law ($N_{\text{cal}}=194$) abstain at $\alpha = 0.05$ to preserve the exact finite-sample guarantee, unlocking substantial coverage once $\alpha \ge 0.10$ (Fig.\ \ref{fig:risk_sweep}). Paired bootstrap resampling ($B=2,000$) and McNemar's test confirm statistically significant AURC improvements ($p < 0.05$) on four of five domains, yielding \textbf{44.5\% to 91.3\%} reductions in expected GBP operational risk cost compared to an uncalibrated always-accept baseline (Fig.\ \ref{fig:economics}).
 
 \subsection{Four-Way Signal Ablation}
 Table \ref{tab:ablation} isolates the contribution of each uncertainty signal. Adding semantic consistency ($S_{\text{sem}}$) or hybrid RRF grounding ($S_{\text{ret}}$) to Stage-1 token confidence ($S_{\text{logit}}$) improves mean AUROC from $0.861$ to $0.884$ and $0.889$, respectively, while combining all three signals in 3S-CCR achieves the highest discrimination ($0.897$ AUROC) and lowest selective risk area ($0.0365$ AURC) (Fig.\ \ref{fig:ablation}).
@@ -223,7 +223,7 @@ $S_{\text{logit}} + S_{\text{ret}}$ & 0.889 & 0.0395 \\
 \end{figure}
 
 \section{Production Microservice \& Live Telemetry}
-To validate operational readiness beyond static offline splits, 3S-CCR is packaged as a containerized FastAPI microservice (\texttt{api.py}) backed by a unified local LLM generation wrapper (\texttt{LocalLLMEngine}, supporting Ollama open-weight inference \cite{touvron2023llama,jiang2023mistral} with deterministic fallback) and an in-memory hybrid RRF retrieval engine. The service exposes:
+To validate operational readiness beyond static offline splits, 3S-CCR is packaged as a containerized FastAPI microservice (\texttt{api.py}) backed by a unified local LLM generation wrapper (\texttt{LocalLLMEngine}, supporting Ollama open-weight inference with deterministic fallback) and an in-memory hybrid RRF retrieval engine. The service exposes:
 \begin{itemize}
     \item \texttt{POST /v2/route}: Evaluates caller-supplied candidate answers, token log-probabilities, and stochastic samples.
     \item \texttt{POST /v2/generate-and-route}: Executes end-to-end answer generation, signal extraction, and conformal routing from a raw user query.
@@ -251,7 +251,7 @@ Confidence Drift $|\Delta \bar{S}_{\text{logit}}|$ (Alert $> 0.15$) & 0.0849 (No
 As summarized in Table \ref{tab:telemetry}, live multi-domain benchmark probes confirm that 80.0\% of routine queries exit at Stage 1 with a median routing latency of $2.45\text{ ms}$ ($21.47\text{ ms}$ $p_{95}$ for Stage-2 RRF retrieval and clustering), while maintaining nominal confidence drift ($|\Delta \bar{S}_{\text{logit}}| = 0.0849 < 0.15$).
 
 \section{Limitations and Governance Considerations}
-While Theorem 1 provides exact finite-sample guarantees under exchangeability, abrupt regulatory amendments (e.g., updated NICE clinical protocols or FCA handbook revisions) induce covariate and label shift \cite{ovadia2019can,gibbs2021adaptive,podkopaev2021distribution}. In regulated UK deployments, 3S-CCR mitigates silent staleness through automated drift alerts (\texttt{/v2/metrics}) that trigger periodic re-calibration on fresh specialist-audited queries, aligning with human-in-the-loop governance principles in safety-critical AI assurance \cite{amodei2016concrete,bommasani2021opportunities}. Future work extends static LTT thresholds to online adaptive conformal inference \cite{gibbs2021adaptive} and multi-turn conversational verification.
+While Theorem 1 provides exact finite-sample guarantees under exchangeability, abrupt regulatory amendments (e.g., updated NICE clinical protocols or FCA handbook revisions) induce covariate and label shift \cite{ovadia2019can}. In regulated UK deployments, 3S-CCR mitigates silent staleness through automated drift alerts (\texttt{/v2/metrics}) that trigger periodic re-calibration on fresh specialist-audited queries, aligning with human-in-the-loop governance principles in safety-critical AI assurance. Future work extends static LTT thresholds to online adaptive conformal inference and multi-turn conversational verification.
 
 \section{Conclusion}
 3S-CCR bridges statistical conformal risk control and cost-aware cascade routing for high-stakes question answering. By gating routine queries with fast token confidence and escalating ambiguous cases to semantic consistency and hybrid RRF evidence verification, 3S-CCR achieves 100\% empirical risk compliance at $\alpha = 0.05$, $2.45\text{ ms}$ median routing latency, and 44.5\%–91.3\% operational risk cost savings across regulated UK domains.
@@ -301,13 +301,13 @@ While Theorem 1 provides exact finite-sample guarantees under exchangeability, a
 \bibitem{asai2024selfrag} A. Asai, Z. Wu, Y. Wang, A. Sil, and H. Hajishirzi, ``Self-RAG: Learning to retrieve, generate, and critique through self-reflection,'' in \emph{Proc. ICLR}, 2024.
 \bibitem{vovk2005algorithmic} V. Vovk, A. Gammerman, and G. Shafer, \emph{Algorithmic Learning in a Random World}. Springer, 2005.
 \bibitem{shafer2008tutorial} G. Shafer and V. Vovk, ``A tutorial on conformal prediction,'' \emph{J. Mach. Learn. Res.}, vol. 9, pp. 371--421, 2008.
-\bibitem{lei2018distribution} J. Lei et al., ``Distribution-free predictive inference for regression,'' \emph{J. Amer. Statist. Assoc.}, vol. 113, no. 523, pp. 1094--1111, 2018.
-\bibitem{romano2020classification} Y. Romano, M. Sesia, and E. Cand\`es, ``Classification with valid and adaptive coverage,'' in \emph{Proc. NeurIPS}, 2020, pp. 3581--3591.
 \bibitem{clopper1934use} C. J. Clopper and E. S. Pearson, ``The use of confidence or fiducial limits illustrated in the case of the binomial,'' \emph{Biometrika}, vol. 26, no. 4, pp. 404--413, 1934.
 \bibitem{angelopoulos2022ltt} A. N. Angelopoulos, S. Bates, E. J. Cand\`es, M. I. Jordan, and L. Lei, ``Learn then test: Calibrating predictive algorithms to achieve risk control,'' \emph{Ann. Appl. Stat.}, vol. 19, no. 2, pp. 1641--1662, 2025.
 \bibitem{angelopoulos2024conformal} A. N. Angelopoulos and S. Bates, ``Conformal prediction: A gentle introduction,'' \emph{Found. Trends Mach. Learn.}, vol. 16, no. 4, pp. 494--591, 2023.
-\bibitem{bates2021distribution} S. Bates et al., ``Distribution-free, risk-controlling prediction sets,'' \emph{J. ACM}, vol. 68, no. 6, pp. 1--34, 2021.
-\bibitem{angelopoulos2024conformalrisk} A. N. Angelopoulos, S. Bates, A. Fisch, L. Lei, and T. Schuster, ``Conformal risk control,'' in \emph{Proc. ICLR}, 2024.
+\bibitem{quach2024conformal} V. Quach et al., ``Conformal language modeling,'' in \emph{Proc. ICLR}, 2024.
+\bibitem{lin2022truthfulqa} S. Lin, J. Hilton, and O. Evans, ``TruthfulQA: Measuring how models mimic human falsehoods,'' in \emph{Proc. ACL}, 2022, pp. 3214--3252.
+\bibitem{thorne2018fever} J. Thorne et al., ``FEVER: a large-scale dataset for fact extraction and verification,'' in \emph{Proc. NAACL-HLT}, 2018, pp. 809--819.
+\bibitem{ovadia2019can} Y. Ovadia et al., ``Can you trust your model's uncertainty? Evaluating predictive uncertainty under dataset shift,'' in \emph{Proc. NeurIPS}, 2019, pp. 13991--14002.
 \end{thebibliography}
 
 \end{document}

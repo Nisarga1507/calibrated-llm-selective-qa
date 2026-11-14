@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.16)  14 NOV 2026 15:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.16)  14 NOV 2026 15:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -432,7 +432,7 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count314
 \l__pdf_internal_box=\box58
 )
-No file main.aux.
+(./main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
@@ -453,6 +453,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
+
 -- Lines per column: 56 (exact).
 (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -477,6 +478,8 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package hyperref Info: Link coloring OFF on input line 19.
+
+(./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
@@ -493,65 +496,6 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 23.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
-LaTeX Warning: Citation `chow1970optimum' on page 1 undefined on input line 31.
-
-
-
-LaTeX Warning: Citation `el2010foundations' on page 1 undefined on input line 3
-1.
-
-
-LaTeX Warning: Citation `geifman2017selective' on page 1 undefined on input lin
-e 31.
-
-
-LaTeX Warning: Citation `ji2023survey' on page 1 undefined on input line 31.
-
-
-LaTeX Warning: Citation `huang2023survey' on page 1 undefined on input line 31.
-
-
-
-LaTeX Warning: Citation `guo2017calibration' on page 1 undefined on input line 
-35.
-
-
-LaTeX Warning: Citation `kadavath2022language' on page 1 undefined on input lin
-e 35.
-
-
-LaTeX Warning: Citation `jiang2021can' on page 1 undefined on input line 35.
-
-
-LaTeX Warning: Citation `azaria2023internal' on page 1 undefined on input line 
-35.
-
-
-LaTeX Warning: Citation `burns2023discovering' on page 1 undefined on input lin
-e 35.
-
-
-LaTeX Warning: Citation `kuhn2023semantic' on page 1 undefined on input line 35
-.
-
-
-LaTeX Warning: Citation `farquhar2024detecting' on page 1 undefined on input li
-ne 35.
-
-
-LaTeX Warning: Citation `lewis2020retrieval' on page 1 undefined on input line 
-35.
-
-
-LaTeX Warning: Citation `manakul2023selfcheckgpt' on page 1 undefined on input 
-line 35.
-
-
-LaTeX Warning: Citation `min2023factscore' on page 1 undefined on input line 35
-.
-
-
-
 
 LaTeX Warning: Citation `ovadia2019can' on page 1 undefined on input line 36.
 
@@ -564,27 +508,14 @@ Underfull \hbox (badness 1824) in paragraph at lines 36--37
 \OT1/ptm/m/n/10 pro-vide no distribution-free up-per bound on post-
  []
 
-
-LaTeX Warning: Citation `geifman2019selectivenet' on page 1 undefined on input 
-line 37.
-
-
-LaTeX Warning: Citation `jaeger2023call' on page 1 undefined on input line 37.
-
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 3
 7.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-
-LaTeX Warning: Citation `clopper1934use' on page 1 undefined on input line 43.
-
-
-LaTeX Warning: Citation `angelopoulos2022ltt' on page 1 undefined on input line
- 43.
-
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 4
 4.
+
 (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
@@ -616,183 +547,12 @@ te\OT1/ptm/m/n/10 ,
  []
 
 
-LaTeX Warning: Citation `guo2017calibration' on page 1 undefined on input line 
-49.
-
-
-LaTeX Warning: Citation `platt1999probabilistic' on page 1 undefined on input l
-ine 49.
-
-
-LaTeX Warning: Citation `niculescu2005predicting' on page 1 undefined on input 
-line 49.
-
-
-LaTeX Warning: Citation `kull2019beyond' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `kadavath2022language' on page 1 undefined on input lin
-e 49.
-
-
-LaTeX Warning: Citation `malinin2021uncertainty' on page 1 undefined on input l
-ine 49.
-
-
-LaTeX Warning: Citation `xiao2021hallucination' on page 1 undefined on input li
-ne 49.
-
-
-LaTeX Warning: Citation `si2023prompting' on page 1 undefined on input line 49.
-
-
-
-LaTeX Warning: Citation `lin2022teaching' on page 1 undefined on input line 49.
-
-
-
-LaTeX Warning: Citation `tian2023just' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `xiong2024can' on page 1 undefined on input line 49.
-
-
-LaTeX Warning: Citation `azaria2023internal' on page 1 undefined on input line 
-49.
-
-
-LaTeX Warning: Citation `burns2023discovering' on page 1 undefined on input lin
-e 49.
-
-
 
 [1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/l
 ocal/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}
 
 
 ]
-
-LaTeX Warning: Citation `kuhn2023semantic' on page 2 undefined on input line 51
-.
-
-
-LaTeX Warning: Citation `farquhar2024detecting' on page 2 undefined on input li
-ne 51.
-
-
-LaTeX Warning: Citation `lin2024generating' on page 2 undefined on input line 5
-1.
-
-
-LaTeX Warning: Citation `manakul2023selfcheckgpt' on page 2 undefined on input 
-line 51.
-
-
-LaTeX Warning: Citation `dhuliawala2024chain' on page 2 undefined on input line
- 51.
-
-
-LaTeX Warning: Citation `lewis2020retrieval' on page 2 undefined on input line 
-54.
-
-
-LaTeX Warning: Citation `guu2020realm' on page 2 undefined on input line 54.
-
-
-LaTeX Warning: Citation `izacard2021leveraging' on page 2 undefined on input li
-ne 54.
-
-
-LaTeX Warning: Citation `borgeaud2022improving' on page 2 undefined on input li
-ne 54.
-
-
-LaTeX Warning: Citation `robertson2009probabilistic' on page 2 undefined on inp
-ut line 54.
-
-
-LaTeX Warning: Citation `karpukhin2020dense' on page 2 undefined on input line 
-54.
-
-
-LaTeX Warning: Citation `cormack2009rrf' on page 2 undefined on input line 54.
-
-
-LaTeX Warning: Citation `williams2018broad' on page 2 undefined on input line 5
-4.
-
-
-LaTeX Warning: Citation `bowman2015large' on page 2 undefined on input line 54.
-
-
-
-LaTeX Warning: Citation `honovich2022true' on page 2 undefined on input line 54
-.
-
-
-LaTeX Warning: Citation `min2023factscore' on page 2 undefined on input line 54
-.
-
-
-LaTeX Warning: Citation `asai2024selfrag' on page 2 undefined on input line 54.
-
-
-
-LaTeX Warning: Citation `chow1970optimum' on page 2 undefined on input line 57.
-
-
-
-LaTeX Warning: Citation `el2010foundations' on page 2 undefined on input line 5
-7.
-
-
-LaTeX Warning: Citation `wiener2011agnostic' on page 2 undefined on input line 
-57.
-
-
-LaTeX Warning: Citation `geifman2017selective' on page 2 undefined on input lin
-e 57.
-
-
-LaTeX Warning: Citation `kamath2020selective' on page 2 undefined on input line
- 57.
-
-
-LaTeX Warning: Citation `varshney2022investigating' on page 2 undefined on inpu
-t line 57.
-
-
-LaTeX Warning: Citation `vovk2005algorithmic' on page 2 undefined on input line
- 57.
-
-
-LaTeX Warning: Citation `shafer2008tutorial' on page 2 undefined on input line 
-57.
-
-
-LaTeX Warning: Citation `lei2018distribution' on page 2 undefined on input line
- 57.
-
-
-LaTeX Warning: Citation `romano2020classification' on page 2 undefined on input
- line 57.
-
-
-LaTeX Warning: Citation `angelopoulos2022ltt' on page 2 undefined on input line
- 57.
-
-
-LaTeX Warning: Citation `angelopoulos2024conformal' on page 2 undefined on inpu
-t line 57.
-
-
-LaTeX Warning: Citation `bates2021distribution' on page 2 undefined on input li
-ne 57.
-
-
-LaTeX Warning: Citation `angelopoulos2024conformalrisk' on page 2 undefined on 
-input line 57.
-
 
 LaTeX Warning: Citation `quach2024conformal' on page 2 undefined on input line 
 57.
@@ -814,19 +574,10 @@ Overfull \hbox (13.23181pt too wide) detected at line 77
  []
 
 
-LaTeX Warning: Citation `kuhn2023semantic' on page 2 undefined on input line 82
-.
-
-
-LaTeX Warning: Citation `cormack2009rrf' on page 2 undefined on input line 89.
-
-
-LaTeX Warning: Citation `robertson2009probabilistic' on page 2 undefined on inp
-ut line 89.
-
-
-LaTeX Warning: Citation `karpukhin2020dense' on page 2 undefined on input line 
-89.
+Underfull \hbox (badness 1661) in paragraph at lines 82--83
+\OT1/ptm/m/it/10 old-ing [[]]. With em-pir-i-cal clus-ter prob-a-bil-i-ties $[]
+ \OT1/cmr/m/n/10 =
+ []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 92--94
@@ -841,15 +592,8 @@ Underfull \hbox (badness 3158) in paragraph at lines 92--94
 10 S[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x\OT1/cmr/m/n/10 ) =
  []
 
-
-LaTeX Warning: Reference `alg:cascade' on page 2 undefined on input line 97.
-
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 104.
-
-LaTeX Warning: Citation `clopper1934use' on page 2 undefined on input line 127.
-
-
 
 
 [2]
@@ -862,21 +606,6 @@ LaTeX Warning: Citation `thorne2018fever' on page 3 undefined on input line 153
 .
 
 
-LaTeX Warning: Citation `jin2019pubmedqa' on page 3 undefined on input line 154
-.
-
-
-LaTeX Warning: Citation `pal2022medmcqa' on page 3 undefined on input line 154.
-
-
-
-LaTeX Warning: Citation `chalkidis2022lexglue' on page 3 undefined on input lin
-e 155.
-
-
-LaTeX Warning: Citation `chen2021finqa' on page 3 undefined on input line 156.
-
-
 
 
 LaTeX Warning: Citation `lin2022truthfulqa' on page 3 undefined on input line 1
@@ -886,8 +615,8 @@ LaTeX Warning: Citation `lin2022truthfulqa' on page 3 undefined on input line 1
 LaTeX Warning: Citation `thorne2018fever' on page 3 undefined on input line 174
 .
 
-<../results/figures/fig1_risk_coverage_alpha_sweep.png, id=52, 903.375pt x 361.
-35pt>
+<../results/figures/fig1_risk_coverage_alpha_sweep.png, id=235, 903.375pt x 361
+.35pt>
 File: ../results/figures/fig1_risk_coverage_alpha_sweep.png Graphic file (type 
 png)
 <use ../results/figures/fig1_risk_coverage_alpha_sweep.png>
@@ -911,63 +640,25 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `alignment tab' on input line 189.
 
 
-LaTeX Warning: Reference `tab:main_results' on page 3 undefined on input line 1
-90.
-
-
-LaTeX Warning: Reference `fig:risk_sweep' on page 3 undefined on input line 190
-.
-
-
-LaTeX Warning: Citation `efron1994introduction' on page 3 undefined on input li
-ne 190.
-
-
-LaTeX Warning: Citation `mcnemar1947note' on page 3 undefined on input line 190
-.
-
-
-LaTeX Warning: Citation `dietterich1998approximate' on page 3 undefined on inpu
-t line 190.
-
-
-LaTeX Warning: Reference `fig:economics' on page 3 undefined on input line 190.
-
-
-
-LaTeX Warning: Reference `tab:ablation' on page 3 undefined on input line 193.
-
-
-LaTeX Warning: Reference `fig:ablation' on page 3 undefined on input line 193.
-
-
 Overfull \hbox (14.88141pt too wide) in paragraph at lines 199--209
  [][] 
  []
 
-<../results/figures/fig2_ablation_auroc_aurc.png, id=54, 975.645pt x 375.804pt>
-
+<../results/figures/fig2_ablation_auroc_aurc.png, id=242, 975.645pt x 375.804pt
+>
 File: ../results/figures/fig2_ablation_auroc_aurc.png Graphic file (type png)
 <use ../results/figures/fig2_ablation_auroc_aurc.png>
 Package pdftex.def Info: ../results/figures/fig2_ablation_auroc_aurc.png  used 
 on input line 213.
 (pdftex.def)             Requested size: 252.0pt x 97.06448pt.
-<../results/figures/fig3_uk_enterprise_economics.png, id=55, 758.835pt x 361.35
-pt>
+<../results/figures/fig3_uk_enterprise_economics.png, id=243, 758.835pt x 361.3
+5pt>
 File: ../results/figures/fig3_uk_enterprise_economics.png Graphic file (type pn
 g)
 <use ../results/figures/fig3_uk_enterprise_economics.png>
 Package pdftex.def Info: ../results/figures/fig3_uk_enterprise_economics.png  u
 sed on input line 220.
 (pdftex.def)             Requested size: 252.0pt x 119.99573pt.
-
-LaTeX Warning: Citation `touvron2023llama' on page 3 undefined on input line 22
-6.
-
-
-LaTeX Warning: Citation `jiang2023mistral' on page 3 undefined on input line 22
-6.
-
 
 Underfull \hbox (badness 10000) in paragraph at lines 230--231
 []\OT1/pcr/m/n/10 GET /v2/metrics\OT1/ptm/m/n/10 : Ex-poses real-time
@@ -991,31 +682,7 @@ o
  []
 
 
-LaTeX Warning: Reference `tab:telemetry' on page 3 undefined on input line 251.
-
-
-
 LaTeX Warning: Citation `ovadia2019can' on page 3 undefined on input line 254.
-
-
-LaTeX Warning: Citation `gibbs2021adaptive' on page 3 undefined on input line 2
-54.
-
-
-LaTeX Warning: Citation `podkopaev2021distribution' on page 3 undefined on inpu
-t line 254.
-
-
-LaTeX Warning: Citation `amodei2016concrete' on page 3 undefined on input line 
-254.
-
-
-LaTeX Warning: Citation `bommasani2021opportunities' on page 3 undefined on inp
-ut line 254.
-
-
-LaTeX Warning: Citation `gibbs2021adaptive' on page 3 undefined on input line 2
-54.
 
 
 
@@ -1052,49 +719,59 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  4A3011C5AE4ADC1718D6C0ABD204E428;3850.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: 4A3011C5AE4ADC1718D6C0ABD204E428;3850.
  ) 
 Here is how much of TeX's memory you used:
- 11367 strings out of 473190
- 178892 string characters out of 5715800
- 611991 words of memory out of 5000000
- 34342 multiletter control sequences out of 15000+600000
+ 11402 strings out of 473190
+ 179393 string characters out of 5715800
+ 614953 words of memory out of 5000000
+ 34367 multiletter control sequences out of 15000+600000
  613980 words of font info for 139 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,13n,79p,1741b,587s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
-></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
-usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></us
-r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/
-local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/lo
-cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
-l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/t
-exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texl
-ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
-/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/20
-25/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/202
-5/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2025/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf
--dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/t
-exmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2025/texmf-dis
-t/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/ty
-pe1/urw/times/utmbi8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/t
-imes/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri
-8a.pfb>
-Output written on main.pdf (5 pages, 1006375 bytes).
+
+pdfTeX warning (dest): name{cite.angelopoulos2024conformalrisk} has been refere
+nced but does not exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{cite.bates2021distribution} has been referenced but
+ does not exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{cite.romano2020classification} has been referenced 
+but does not exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{cite.lei2018distribution} has been referenced but d
+oes not exist, replaced by a fixed one
+
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
+/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
+usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></us
+r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
+local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/lo
+cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/loca
+l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/
+texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/tex
+live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2
+025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2025
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2025/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf-d
+ist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/tex
+mf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2025/texmf-dist/
+fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type
+1/urw/times/utmbi8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/tim
+es/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a
+.pfb>
+Output written on main.pdf (5 pages, 1011641 bytes).
 PDF statistics:
- 279 PDF objects out of 1000 (max. 8388607)
- 219 compressed objects within 3 object streams
- 113 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 415 PDF objects out of 1000 (max. 8388607)
+ 354 compressed objects within 4 object streams
+ 117 named destinations out of 1000 (max. 500000)
+ 160 words of extra memory for PDF output out of 10000 (max. 10000000)
 
